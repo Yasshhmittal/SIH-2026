@@ -34,7 +34,7 @@ export function useRunStream() {
       setStatus("running");
     };
 
-    source.onmessage = (msg) => {
+    const handleEvent = (msg) => {
       try {
         const event = JSON.parse(msg.data);
         setEvents((prev) => [...prev, event]);
@@ -58,6 +58,22 @@ export function useRunStream() {
         // Ignore malformed events
       }
     };
+
+    const eventTypes = [
+      "run.started",
+      "stage.started",
+      "plan.created",
+      "step.started",
+      "step.completed",
+      "artifact.created",
+      "run.completed",
+      "run.failed",
+      "run.cancelled"
+    ];
+
+    eventTypes.forEach(type => {
+      source.addEventListener(type, handleEvent);
+    });
 
     source.onerror = () => {
       if (status === "connecting" || status === "running") {
