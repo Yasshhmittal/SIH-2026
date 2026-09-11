@@ -1,0 +1,95 @@
+# PRAHARI model registry
+#
+# Adding a model is ONE entry here plus `ollama pull <id>`. No code changes.
+# This file is hot-reloadable at runtime (POST /api/models/reload) which is
+# how the "add a model live" demo works.
+#
+# Fields:
+#   id         ollama model tag, exactly as `ollama list` shows it
+#   roles      what tasks this model is allowed to serve (hard gate)
+#   modalities what it can *consume* (hard gate). text | image
+#   mem_mb     resident footprint. On GPU this is VRAM; on CPU it is RAM.
+#   ctx        usable context window in tokens
+#   quality    capability prior, 0..1. Hand-set, relative within a role.
+#   speed_tps  measured tokens/sec. null = unmeasured; filled in at first use
+#              and persisted, so the router's latency term gets real data.
+#   resident   true = never evicted (small always-needed models)
+#   device     cpu | gpu | auto. Embeddings stay on cpu to protect the budget.
+#   notes      human-facing; surfaced in the router decision table
+
+models:
+  # ---------------------------------------------------------------- text ---
+  - id: qwen2.5:1.5b
+    roles: [reason, plan, write, summarize, classify, extract]
+    modalities: [text]
+    mem_mb: 1100
+    ctx: 32768
+    quality: 0.42
+    speed_tps: null
+    device: auto
+    notes: "Fast generalist. Default for planning and classification."
+
+  - id: qwen2.5:3b-instruct
+    roles: [reason, plan, write, summarize, classify, extract]
+    modalities: [text]
+    mem_mb: 2100
+    ctx: 32768
+    quality: 0.58
+    speed_tps: null
+    device: auto
+    notes: "Balanced generalist. Preferred for drafting deliverables."
+
+  # ---------------------------------------------------------------- code ---
+  - id: qwen2.5-coder:1.5b
+    roles: [code]
+    modalities: [text]
+    mem_mb: 1100
+    ctx: 32768
+    quality: 0.45
+    speed_tps: null
+    device: auto
+    notes: "Fast coder. Good enough for short scripts and test fixes."
+
+  - id: qwen2.5-coder:7b
+    roles: [code]
+    modalities: [text]
+    mem_mb: 5000
+    ctx: 32768
+    quality: 0.72
+    speed_tps: null
+    device: auto
+    notes: "Strongest coder available. Expensive: nearly the whole budget."
+
+  # -------------------------------------------------------------- vision ---
+  - id: moondream
+    roles: [vision, ocr_assist]
+    modalities: [text, image]
+    mem_mb: 1900
+    ctx: 2048
+    quality: 0.40
+    speed_tps: null
+    device: auto
+    notes: "Fast vision. Photographs and simple scans."
+
+  - id: qwen2.5vl:3b
+    roles: [vision, ocr_assist, diagram]
+    modalities: [text, image]
+    mem_mb: 3500
+    ctx: 32768
+    quality: 0.62
+    speed_tps: null
+    device: auto
+    optional: true          # tolerated absent; router skips if not pulled
+    notes: "Quality vision. Engineering drawings, dense tables, handwriting."
+
+  # ---------------------------------------------------------- embeddings ---
+  - id: bge-m3
+    roles: [embed]
+    modalities: [text]
+    mem_mb: 1300
+    ctx: 8192
+    quality: 0.70
+    speed_tps: null
+    resident: true          # pinned: retrieval needs it constantly
+    device: cpu             # deliberately off the accelerator budget
+    notes: "Multilingual embeddings. CPU-pinned so the budget stays free."

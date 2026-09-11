@@ -1,0 +1,71 @@
+# PRAHARI deployment profiles
+#
+# A profile declares the RESOURCE BUDGET the router plans against, plus the
+# scoring weights. The budget is DECLARED, not probed — production deployments
+# want a hard ceiling anyway (you don't let the assistant eat all the VRAM),
+# and it means the same router logic is exercised identically on a CPU dev box
+# and on the target GPU server.
+#
+# Switch with PRAHARI_PROFILE=<name>.
+
+active: cpu-dev
+
+profiles:
+
+  # The machine this was built on: i7-14700HX, 20 cores, 16 GB RAM, no CUDA.
+  # Budget is set to 6000 MB deliberately: it mirrors the 6 GB RTX 3050 target,
+  # so swap behaviour observed here is the swap behaviour that will occur there.
+  cpu-dev:
+    label: "CPU dev box (budget mirrors 6 GB target)"
+    accelerator: cpu
+    budget_mb: 6000
+    max_concurrent_models: 1
+    weights:
+      quality: 1.00        # capability prior
+      context: 0.30        # does the task fit in this model's window
+      latency: 0.25        # faster is better
+      swap: 0.55           # penalty for evicting + loading. THE key term.
+      pressure: 0.20       # penalty for consuming most of the budget
+    # CPU generation is slow, so budgets are wider than they would be on GPU.
+    step_timeout_s: 180
+    prefetch: true         # plan-aware: start loading step N+2's model early
+
+  # Target demo machine: RTX 3050 laptop, 6 GB VRAM.
+  gpu-6gb:
+    label: "RTX 3050 6 GB"
+    accelerator: cuda
+    budget_mb: 5200        # 6 GB less desktop compositor overhead
+    max_concurrent_models: 1
+    weights:
+      quality: 1.00
+      context: 0.30
+      latency: 0.25
+      swap: 0.55
+      pressure: 0.20
+    step_timeout_s: 90
+    prefetch: true
+
+  # Stretch machine: RTX 5060 Ti 16 GB. Two models stay resident, so the swap
+  # penalty matters far less and quality dominates.
+  gpu-16gb:
+    label: "RTX 5060 Ti 16 GB"
+    accelerator: cuda
+    budget_mb: 15000
+    max_concurrent_models: 2
+    weights:
+      quality: 1.00
+      context: 0.30
+      latency: 0.15
+      swap: 0.15
+      pressure: 0.05
+    step_timeout_s: 60
+    prefetch: true
+
+# Agent execution budgets. Hard stops — the agent returns partial results
+# rather than looping. Every one of these is enforced in agent/loop.py.
+agent:
+  max_steps: 14
+  max_replans: 2
+  max_sandbox_retries: 3
+  wall_clock_s: 900
+  max_tokens_per_run: 120000
