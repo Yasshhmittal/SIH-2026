@@ -1,0 +1,59 @@
+SYNTHETIC DEMO DOCUMENT — not real MRPL data
+
+SOP-INS-07
+PIPING INSPECTION AND THICKNESS EVALUATION
+
+1. Purpose
+This procedure governs ultrasonic thickness survey, evaluation and disposition
+of process piping within the refinery battery limits.
+
+2. Scope
+Applies to all carbon steel and low-alloy piping in hydrocarbon and sour
+service, nominal bore 2 inch and above.
+
+3. Definitions
+3.1 Nominal thickness is the as-built wall thickness recorded on the isometric.
+3.2 Measured thickness is the minimum reading obtained at a condition
+    monitoring location during ultrasonic survey.
+3.3 Retirement thickness is the minimum wall thickness below which a component
+    must be repaired, derated or replaced.
+
+4. Retirement Thickness Criteria
+4.1 Retirement thickness shall be established from the design pressure, the
+    material allowable stress and a corrosion allowance, and shall be recorded
+    on the circuit datasheet.
+4.2 In the absence of a circuit-specific value, the minimum retirement
+    thickness for 8 inch carbon steel piping in sour service shall be 6.4 mm.
+    Components measuring below this value shall be derated or replaced.
+4.3 For 6 inch carbon steel piping in sour service the minimum retirement
+    thickness shall be 5.6 mm.
+4.4 For 12 inch carbon steel piping in wet hydrocarbon service the minimum
+    retirement thickness shall be 7.1 mm.
+
+5. Inspection Intervals
+5.1 Re-inspection shall occur at one half of calculated remaining life, or five
+    years, whichever is the lesser.
+5.2 Where the calculated corrosion rate exceeds 0.25 mm per year the circuit
+    shall be reclassified as high consequence and the interval shortened to
+    one half of remaining life or three years, whichever is the lesser.
+5.3 Circuits with a corrosion rate below 0.05 mm per year may be extended to a
+    ten year interval subject to approval by the Chief Inspector.
+
+6. Corrosion Rate Calculation
+6.1 The long-term corrosion rate shall be calculated as the difference between
+    nominal and measured thickness divided by the years in service.
+6.2 Remaining life shall be calculated as the difference between measured and
+    retirement thickness divided by the corrosion rate.
+6.3 Where measured thickness is already at or below retirement thickness, no
+    remaining life exists and the component shall be treated as a present
+    deficiency requiring immediate disposition.
+
+7. Disposition and Approval
+7.1 A component below retirement thickness shall be reported to the Inspection
+    Engineer within one working day.
+7.2 Derating, repair or replacement shall be raised as a work order under
+    Management of Change.
+7.3 An approval note shall record the findings, the calculation with steps, the
+    governing clause of this procedure, and the recommended disposition.
+7.4 Approval authority for derating rests with the Chief Inspector. Replacement
+    exceeding fifty lakh rupees requires Head of Department endorsement.

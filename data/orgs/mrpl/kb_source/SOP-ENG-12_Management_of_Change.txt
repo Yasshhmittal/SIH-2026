@@ -1,0 +1,33 @@
+SYNTHETIC DEMO DOCUMENT — not real MRPL data
+
+SOP-ENG-12
+MANAGEMENT OF CHANGE
+
+1. Purpose
+To ensure that changes to process, equipment or operating envelope are assessed
+for risk and formally authorised before implementation.
+
+2. When MOC Is Required
+2.1 Any change to design pressure, design temperature or material of
+    construction.
+2.2 Replacement of a component with one of differing specification.
+2.3 Derating of equipment below its original design conditions.
+2.4 Temporary repairs intended to remain in service beyond ninety days.
+
+3. Exclusions
+3.1 Replacement in kind, being a component identical in specification to the
+    one removed, does not require MOC.
+3.2 Routine maintenance carried out under an approved procedure is excluded.
+
+4. Approval Matrix
+4.1 Changes with no safety or environmental consequence: Area Engineer.
+4.2 Changes affecting a pressure envelope: Chief Inspector and Area Manager.
+4.3 Changes affecting a safety instrumented function: Chief Inspector, Area
+    Manager and Head of Safety.
+4.4 Derating of a pressure system: Chief Inspector, with notification to the
+    statutory authority where required.
+
+5. Documentation
+5.1 Each MOC shall record the technical basis, the risk assessment, the
+    approvals obtained and the close-out verification.
+5.2 MOC records shall be retained for the life of the asset plus seven years.

@@ -1,0 +1,33 @@
+SYNTHETIC DEMO DOCUMENT — not real MRPL data
+
+SOP-INS-11
+PRESSURE VESSEL INSPECTION
+
+1. Scope
+Applies to unfired pressure vessels, including columns, drums and heat
+exchanger shells, within refinery battery limits.
+
+2. External Inspection
+2.1 External visual inspection shall be carried out at intervals not exceeding
+    five years.
+2.2 Insulation shall be removed at suspect locations to inspect for corrosion
+    under insulation where the operating temperature lies between minus four
+    and one hundred and seventy five degrees Celsius.
+
+3. Internal Inspection
+3.1 Internal inspection interval shall not exceed one half of remaining life or
+    ten years, whichever is the lesser.
+3.2 Where internal inspection is impractical, an on-stream inspection plan
+    using ultrasonic and radiographic methods may be substituted with the
+    approval of the Chief Inspector.
+
+4. Thickness Criteria
+4.1 The minimum retirement thickness for a vessel shell shall be calculated
+    from the design code and recorded on the vessel datasheet.
+4.2 Localised thinning over an area smaller than the lesser of one third of the
+    vessel diameter or five hundred millimetres may be evaluated by local
+    averaging in accordance with the design code.
+
+5. Reporting
+5.1 An inspection report shall record all condition monitoring location
+    readings, the calculated corrosion rates and the next inspection due date.

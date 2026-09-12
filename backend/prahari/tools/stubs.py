@@ -1,11 +1,12 @@
-"""Placeholder tools for subsystems not yet built (phases P3-P5).
+"""Tools whose subsystems are not yet built (phases P4-P5), plus kb.search.
 
-These are deliberately *honest*: every observation is tagged `stub: true` and
-the summary is prefixed `[STUB]`, so a stubbed run is never mistaken for a
-working one — in the UI, in the audit log, or in a demo.
+The remaining stubs are deliberately *honest*: every observation is tagged
+`stub: true` and the summary is prefixed `[STUB]`, so a stubbed run is never
+mistaken for a working one — in the UI, in the audit log, or in a demo.
 
-The interfaces here are final. Replacing a stub means swapping the handler
-body; nothing upstream changes.
+`kb.search` is no longer a stub; it lives here because the tool definitions are
+registered together. Its interface did not change when the real implementation
+landed, which is the point of having defined it properly up front.
 """
 
 from __future__ import annotations
@@ -30,11 +31,14 @@ def _stub(summary: str, **data) -> Observation:
 
 
 def kb_search(ctx: ToolContext, *, query: str, k: int = 6) -> Observation:
-    return _stub(
-        f"would retrieve top-{k} chunks for: {query!r}",
-        query=query, k=k, chunks=[],
-        note="Knowledge plane lands in P3 (Qdrant hybrid + citation verifier).",
-    )
+    """Real hybrid retrieval over the organisation's indexed documents.
+
+    No longer a stub. Scoped by `ctx.org_id`, so one organisation's chunks are
+    structurally unreachable from another's.
+    """
+    from ..knowledge.search import search_knowledge
+
+    return search_knowledge(query, org_id=ctx.org_id, k=k)
 
 
 def ocr_page(ctx: ToolContext, *, document: str, page: int = 1) -> Observation:

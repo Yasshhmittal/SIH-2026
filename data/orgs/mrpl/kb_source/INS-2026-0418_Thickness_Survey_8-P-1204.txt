@@ -1,0 +1,41 @@
+SYNTHETIC DEMO DOCUMENT — not real MRPL data
+
+ULTRASONIC THICKNESS SURVEY REPORT
+Report number: INS-2026-0418
+Unit: Crude Distillation Unit (CDU)
+Circuit: 8-P-1204, overhead vapour line to condenser
+Service: Sour hydrocarbon, wet
+Material: ASTM A106 Grade B carbon steel
+Nominal bore: 8 inch
+Nominal wall thickness: 8.0 mm
+Years in service: 7
+Survey date: 2026-08-28
+Inspector: (synthetic record)
+
+CONDITION MONITORING LOCATION READINGS
+
+CML | Location | Nominal mm | Measured mm | Retirement mm | Status
+CML-01 | Straight run upstream | 8.0 | 7.4 | 6.4 | acceptable
+CML-02 | Elbow E-12 extrados | 8.0 | 7.1 | 6.4 | acceptable
+CML-03 | Elbow E-14 extrados | 8.0 | 5.9 | 6.4 | BELOW RETIREMENT
+CML-04 | Tee T-03 branch | 8.0 | 6.8 | 6.4 | monitor
+CML-05 | Straight run downstream | 8.0 | 7.3 | 6.4 | acceptable
+CML-06 | Reducer R-02 | 8.0 | 6.6 | 6.4 | monitor
+
+OBSERVATIONS
+The lowest reading in the circuit is 5.9 mm at CML-03, Elbow E-14 extrados,
+which is below the retirement thickness of 6.4 mm stated for 8 inch carbon
+steel piping in sour service. Wall loss is concentrated on the extrados of the
+elbow, consistent with erosion-corrosion at a change of direction.
+
+CML-04 and CML-06 are above retirement thickness but show higher than average
+loss and should be added to the next survey scope.
+
+No external corrosion, coating breakdown or insulation damage was observed on
+the circuit during the accompanying external visual inspection.
+
+RECOMMENDATIONS
+1. Report the CML-03 deficiency to the Inspection Engineer.
+2. Evaluate derating or replacement of the Elbow E-14 spool.
+3. Raise the disposition under Management of Change.
+4. Shorten the survey interval for this circuit pending disposition.

@@ -1,0 +1,28 @@
+SYNTHETIC DEMO DOCUMENT — not real MRPL data
+
+INTERNAL MEMORANDUM
+
+From: Inspection Engineer, CDU
+To: Chief Inspector
+Date: 2026-08-30
+Subject: Thickness deficiency, circuit 8-P-1204, Elbow E-14
+
+Further to ultrasonic survey report INS-2026-0418 dated 28 August 2026, the
+lowest reading on circuit 8-P-1204 is 5.9 mm at CML-03, Elbow E-14 extrados,
+against a retirement thickness of 6.4 mm per SOP-INS-07 clause 4.2.
+
+The circuit has been in service seven years against a nominal wall of 8.0 mm,
+giving a long-term corrosion rate of approximately 0.3 mm per year. As the
+measured thickness is already below retirement thickness, clause 6.3 applies
+and no remaining life may be claimed.
+
+Since the calculated corrosion rate exceeds 0.25 mm per year, clause 5.2
+requires the circuit to be reclassified as high consequence.
+
+I recommend replacement of the affected spool at the next available opportunity
+and, in the interim, derating of the circuit pending replacement. Both actions
+require Management of Change per SOP-ENG-12 clause 2.3, with approval by the
+Chief Inspector per clause 4.4.
+
+A vendor quotation for the replacement spool is being obtained and is expected
+to fall below the fifty lakh threshold requiring Head of Department endorsement.
