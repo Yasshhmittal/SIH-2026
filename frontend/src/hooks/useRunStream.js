@@ -8,6 +8,7 @@ import { sseUrl } from "../lib/api";
 export function useRunStream() {
   const [events, setEvents] = useState([]);
   const [status, setStatus] = useState("idle");
+  const [runId, setRunId] = useState(null);
   const sourceRef = useRef(null);
 
   const reset = useCallback(() => {
@@ -17,6 +18,7 @@ export function useRunStream() {
     }
     setEvents([]);
     setStatus("idle");
+    setRunId(null);
   }, []);
 
   const startStream = useCallback((runId) => {
@@ -25,6 +27,7 @@ export function useRunStream() {
     }
     setEvents([]);
     setStatus("connecting");
+    setRunId(runId);
 
     const url = sseUrl(runId);
     const source = new EventSource(url);
@@ -92,5 +95,5 @@ export function useRunStream() {
     };
   }, []);
 
-  return { events, status, startStream, reset };
+  return { events, status, runId, startStream, reset };
 }

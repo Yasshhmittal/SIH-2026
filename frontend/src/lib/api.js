@@ -49,6 +49,7 @@ export async function uploadDocument(file, orgId = "mrpl") {
   const form = new FormData();
   form.append("file", file);
   form.append("org_id", orgId);
+  form.append("embed", "false");
 
   const res = await fetch(`${API_BASE}/api/documents/upload`, {
     method: "POST",

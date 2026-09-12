@@ -97,7 +97,7 @@ export default function PromptInput({ onSubmit, disabled, status, orgId = "mrpl"
 
       {uploading && (
         <div style={{ fontSize: "0.7rem", color: "var(--text-secondary)", marginBottom: "0.5rem" }}>
-          Indexing document — embedding on CPU, this takes a few seconds...
+          Indexing document...
         </div>
       )}
 
@@ -128,15 +128,33 @@ export default function PromptInput({ onSubmit, disabled, status, orgId = "mrpl"
         style={{ display: "none" }}
       />
 
-      <div style={{ display: "flex", alignItems: "flex-end", gap: "0.5rem" }}>
+      <div style={{ display: "flex", alignItems: "flex-end", gap: "0.75rem" }}>
         <button
           type="button"
           disabled={busy}
           onClick={() => fileInputRef.current?.click()}
-          style={{ flexShrink: 0, width: "32px", height: "32px", borderRadius: "0.375rem", background: "var(--glass-bg)", border: "1px solid var(--glass-border)", display: "flex", alignItems: "center", justifyContent: "center", cursor: busy ? "not-allowed" : "pointer", opacity: busy ? 0.5 : 1 }}
+          className="btn"
+          style={{
+            flexShrink: 0,
+            height: "44px",
+            padding: "0 1.25rem",
+            borderRadius: "0.5rem",
+            background: "var(--glass-bg)",
+            border: "1px solid var(--glass-border)",
+            display: "flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            color: "var(--text-primary)",
+            cursor: busy ? "not-allowed" : "pointer",
+            opacity: busy ? 0.5 : 1,
+            transition: "all 0.2s ease",
+          }}
+          onMouseEnter={(e) => { if(!busy) e.currentTarget.style.borderColor = "var(--accent-color)"; }}
+          onMouseLeave={(e) => { if(!busy) e.currentTarget.style.borderColor = "var(--glass-border)"; }}
           title="Attach a document (PDF, Word, Excel, PowerPoint, text, CSV, image) — or drop it here"
         >
-          {uploading ? "⏳" : "📎"}
+          <span>{uploading ? "⏳" : "📎"}</span>
+          <span style={{ fontSize: "0.9rem", fontWeight: 500 }}>Upload File</span>
         </button>
         <textarea
           ref={textareaRef}
@@ -149,13 +167,15 @@ export default function PromptInput({ onSubmit, disabled, status, orgId = "mrpl"
           placeholder="Ask about your documents, or draft a deliverable..."
           disabled={disabled}
           rows={1}
-          style={{ flex: 1, resize: "none", background: "var(--glass-bg)", color: "var(--text-primary)", fontSize: "0.9rem", borderRadius: "0.5rem", padding: "0.5rem 0.75rem", border: "1px solid var(--glass-border)", outline: "none", maxHeight: "160px", fontFamily: "inherit" }}
+          style={{ flex: 1, resize: "none", background: "var(--glass-bg)", color: "var(--text-primary)", fontSize: "0.95rem", borderRadius: "0.5rem", padding: "0.6rem 1rem", minHeight: "44px", border: "1px solid var(--glass-border)", outline: "none", maxHeight: "160px", fontFamily: "inherit", transition: "border-color 0.2s" }}
+          onFocus={(e) => e.target.style.borderColor = "var(--accent-color)"}
+          onBlur={(e) => e.target.style.borderColor = "var(--glass-border)"}
         />
         <button
           type="submit"
           disabled={disabled || !text.trim()}
           className="btn btn-primary"
-          style={{ flexShrink: 0, width: "32px", height: "32px", padding: 0, display: "flex", alignItems: "center", justifyContent: "center" }}
+          style={{ flexShrink: 0, width: "44px", height: "44px", padding: 0, borderRadius: "0.5rem", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "1.2rem" }}
         >
           ↑
         </button>

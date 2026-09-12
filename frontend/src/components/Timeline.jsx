@@ -17,7 +17,7 @@ function StepIcon({ ok, running }) {
   return <div style={{ width: '20px', height: '20px', borderRadius: '50%', border: '1px solid var(--glass-border)', color: 'var(--text-secondary)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.75rem' }}>·</div>;
 }
 
-export default function Timeline({ events }) {
+export default function Timeline({ events, runId }) {
   if (!events || events.length === 0) return null;
 
   return (
@@ -78,19 +78,30 @@ export default function Timeline({ events }) {
             );
           case "artifact.created":
             return (
-              <div key={idx} className="glass-card" style={{ marginLeft: '1.75rem', marginTop: '0.25rem', marginBottom: '0.5rem', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'rgba(255,255,255,0.9)' }}>
+              <div key={idx} className="glass-card" style={{ marginLeft: '1.75rem', marginTop: '0.25rem', marginBottom: '0.5rem', padding: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.75rem', background: 'var(--glass-bg)' }}>
                 <div style={{ fontSize: '1.5rem' }}>📄</div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 500, fontSize: '0.85rem', color: 'var(--text-primary)' }}>{p.kind?.toUpperCase()}: {p.filename || p.relative_path}</div>
                   <div style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', marginTop: '0.125rem' }}>Ready for download</div>
                 </div>
-                <button className="btn btn-primary" style={{ padding: '0.25rem 0.75rem', fontSize: '0.7rem' }}>Download</button>
+                <button 
+                  className="btn btn-primary" 
+                  style={{ padding: '0.35rem 0.85rem', fontSize: '0.75rem' }}
+                  onClick={() => window.open(`http://127.0.0.1:8077/api/runs/${runId}/artifacts/${p.filename || p.relative_path}`, "_blank")}
+                >
+                  Download
+                </button>
               </div>
             );
           case "run.completed":
             return (
               <div key={idx} className="glass" style={{ margin: '0.75rem 0.5rem', padding: '0.75rem', background: 'rgba(16, 185, 129, 0.1)', border: '1px solid rgba(16, 185, 129, 0.3)' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.85rem', fontWeight: 500, color: '#10b981' }}>✓ COMPLETED</div>
+                {p.answer && (
+                    <div style={{ marginTop: '0.75rem', padding: '0.75rem', background: 'var(--glass-bg)', borderRadius: '0.25rem', color: 'var(--text-primary)', fontSize: '0.85rem', border: '1px solid var(--glass-border)', whiteSpace: 'pre-wrap' }}>
+                        {p.answer}
+                    </div>
+                )}
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginTop: '0.25rem' }}>{p.steps} steps · {p.tokens} tokens · {p.elapsed_s}s</div>
               </div>
             );

@@ -3,14 +3,16 @@
 from __future__ import annotations
 
 import json
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel, Field
 from sse_starlette.sse import EventSourceResponse
 
 from ..agent.loop import get_runner
-from ..config import get_settings
+from ..config import get_settings, ORGS_DIR
 from ..events import bus
 from ..llm.ollama import get_client
 from ..router.registry import get_registry
@@ -174,6 +176,26 @@ async def run_events(run_id: str) -> EventSourceResponse:
 
     return EventSourceResponse(generator())
 
+
+@router.get("/runs/{run_id}/artifacts/{filename}")
+def download_artifact(run_id: str, filename: str) -> FileResponse:
+    """Download a generated artifact file for a run."""
+    state = get_runner().get(run_id)
+    if state is None:
+        raise HTTPException(status_code=404, detail="unknown run")
+    
+    workspace_dir = ORGS_DIR / state.org_id / "workspace" / run_id / "artifacts"
+    target = (workspace_dir / filename).resolve()
+    
+    try:
+        target.relative_to(workspace_dir.resolve())
+    except ValueError:
+        raise HTTPException(status_code=400, detail="invalid filename")
+        
+    if not target.is_file():
+        raise HTTPException(status_code=404, detail="artifact not found")
+        
+    return FileResponse(target, filename=filename)
 
 # ------------------------------------------------------------------ tools ---
 

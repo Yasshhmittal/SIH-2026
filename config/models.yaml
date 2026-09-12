@@ -20,14 +20,14 @@
 models:
   # ---------------------------------------------------------------- text ---
   - id: qwen2.5:1.5b
-    roles: [reason, plan, write, summarize, classify, extract]
+    roles: [reason, write, summarize, classify, extract]
     modalities: [text]
     mem_mb: 1100
     ctx: 32768
     quality: 0.42
     speed_tps: null
     device: auto
-    notes: "Fast generalist. Default for planning and classification."
+    notes: "Fast generalist. Default for classification."
 
   - id: qwen2.5:3b-instruct
     roles: [reason, plan, write, summarize, classify, extract]

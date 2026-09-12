@@ -392,17 +392,25 @@ class AgentRunner:
             "Produce the plan."
         )
 
-        gen = self._client.chat(
-            model,
-            [{"role": "system", "content": PLAN_SYSTEM},
-             {"role": "user", "content": user}],
-            schema=schema_of(Plan),
-            temperature=0.1,
-            num_predict=1400,
-        )
-        state.tokens += gen.prompt_tokens + gen.output_tokens
-        plan = Plan.model_validate_json(gen.text)
-        plan = self._sanitise_plan(state, plan)
+        for attempt in range(3):
+            gen = self._client.chat(
+                model,
+                [{"role": "system", "content": PLAN_SYSTEM},
+                 {"role": "user", "content": user}],
+                schema=schema_of(Plan),
+                temperature=0.4,
+                num_predict=1400,
+            )
+            state.tokens += gen.prompt_tokens + gen.output_tokens
+            
+            try:
+                plan = Plan.model_validate_json(gen.text)
+                plan = self._sanitise_plan(state, plan)
+                break
+            except Exception as e:
+                if attempt == 2:
+                    raise RuntimeError(f"Planner failed to generate a valid plan: {e}")
+                continue
 
         bus.publish(state.run_id, "plan.created", {
             "source": "freehand",
@@ -592,6 +600,40 @@ missing, supply them from the original request. Do not change the tool."""
         bus.publish(state.run_id, "step.completed", record)
         return record
 
+    def _synthesize(self, state: RunState) -> str | None:
+        bus.publish(state.run_id, "stage.started", {"stage": "synthesize"})
+        model = self._route(
+            state.run_id,
+            routing_request_for("write"),
+            label="synthesize answer",
+        )
+        if model is None:
+            return None
+
+        context_lines = []
+        for obs in state.observations.values():
+            if obs.get("ok") and isinstance(obs.get("data"), dict):
+                chunks = obs["data"].get("chunks", []) + obs["data"].get("citations", [])
+                for chunk in chunks:
+                    context_lines.append(f"[{chunk.get('document', 'unknown')}] {chunk.get('text', '')}")
+
+        context_text = "\n\n".join(context_lines)
+        system = (
+            "You are a helpful industrial assistant. Answer the user's question using only "
+            "the provided context. If the context does not contain the answer, say so."
+        )
+        user_prompt = f"Context:\n{context_text}\n\nQuestion: {state.prompt}"
+
+        gen = self._client.chat(
+            model,
+            [
+                {"role": "system", "content": system},
+                {"role": "user", "content": user_prompt},
+            ],
+        )
+        state.tokens += gen.prompt_tokens + gen.output_tokens
+        return gen.text
+
     # -- the loop ----------------------------------------------------------
 
     def _execute(self, state: RunState) -> None:
@@ -636,9 +678,14 @@ missing, supply them from the original request. Do not change the tool."""
 
                 self._execute_step(state, step, index)
 
+            answer = None
+            if state.task and state.task.deliverable in {"answer", "none"}:
+                answer = self._synthesize(state)
+
             bus.publish(state.run_id, "run.completed", {
                 "steps": len(state.plan.steps),
                 "artifacts": state.artifacts,
+                "answer": answer,
                 "elapsed_s": round(state.elapsed, 1),
                 "tokens": state.tokens,
                 "residency": self._residency.state(),

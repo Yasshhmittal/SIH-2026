@@ -85,7 +85,12 @@ function SourcesTab({ events }) {
             </div>
             <div style={{ fontWeight: 500, color: 'var(--text-primary)' }}>{s.document}{s.page && <span style={{ color: 'var(--text-secondary)', fontWeight: 400 }}>, p. {s.page}</span>}</div>
             {s.section && <div style={{ color: 'var(--text-secondary)', marginTop: '0.125rem' }}>{s.section}</div>}
-            {s.text && <div style={{ color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.4 }}>{s.text.substring(0, 150)}...</div>}
+            {s.text && (
+              <details style={{ marginTop: '0.5rem' }}>
+                <summary style={{ color: 'var(--accent-color)', cursor: 'pointer', outline: 'none', userSelect: 'none' }}>Show content</summary>
+                <div style={{ color: 'var(--text-secondary)', marginTop: '0.5rem', lineHeight: 1.4 }}>{s.text}</div>
+              </details>
+            )}
           </div>
         ))
       )}

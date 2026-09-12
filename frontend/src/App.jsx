@@ -9,7 +9,7 @@ import { apiPost } from './lib/api';
 import './index.css';
 
 function App() {
-  const { events, status, startStream, reset } = useRunStream();
+  const { events, status, runId, startStream, reset } = useRunStream();
   const [currentPrompt, setCurrentPrompt] = useState("");
   const scrollRef = useRef(null);
 
@@ -83,12 +83,12 @@ function App() {
               )}
 
               {currentPrompt && (
-                <div className="glass" style={{ padding: '1rem', marginBottom: '1rem', background: 'rgba(255,255,255,0.9)' }}>
+                <div className="glass" style={{ padding: '1rem', marginBottom: '1rem', background: 'var(--glass-bg)' }}>
                   <div style={{ fontSize: '0.85rem', color: 'var(--text-primary)', fontWeight: 500 }}>{currentPrompt}</div>
                 </div>
               )}
 
-              {events.length > 0 && <Timeline events={events} />}
+              {events.length > 0 && <Timeline events={events} runId={runId} />}
               
               {isRunning && (
                 <div style={{ display: 'flex', gap: '0.5rem', padding: '1rem', alignItems: 'center' }}>
