@@ -89,10 +89,22 @@ def main() -> int:
                               f"(evidence: {fix['evidence']!r})")
 
                 elif kind == "plan.created":
-                    print(f"[{elapsed:6.1f}s] PLAN ({payload['tokens_per_second']} tok/s)"
-                          f"  goal: {payload['goal'][:70]}")
+                    origin = payload.get("source", "freehand")
+                    if origin == "recipe":
+                        tag = f"\033[32mRECIPE {payload['recipe']}\033[0m"
+                    else:
+                        tps = payload.get("tokens_per_second")
+                        tag = f"freehand ({tps} tok/s)" if tps else "freehand"
+                    print(f"[{elapsed:6.1f}s] PLAN via {tag}")
+                    if payload.get("extracted"):
+                        print(f"           extracted: {payload['extracted']}")
                     for step in payload["steps"]:
                         print(f"           {step['id']}. {step['tool']:<16} {step['why'][:52]}")
+
+                elif kind == "extract.warning":
+                    print(f"[{elapsed:6.1f}s] \033[31mEXTRACT WARNING\033[0m "
+                          f"{'; '.join(payload['warnings'])}")
+                    print(f"           {payload.get('action', '')}")
 
                 elif kind == "plan.repaired":
                     for drop in payload["dropped"]:

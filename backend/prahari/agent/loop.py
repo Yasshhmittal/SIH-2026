@@ -33,7 +33,9 @@ from ..router.budget import ResidencyManager
 from ..router.registry import Registry, get_registry
 from ..router.scorer import RoutingRequest, score_models
 from ..tools import DEFAULT_GRANTS, ToolContext, registry as tools
+from .extract import extract_values
 from .hints import detect_signals, reconcile
+from .recipes import build_plan, select_recipe
 from .schemas import Plan, PlanStep, TaskSpec, schema_of
 
 # Which model role each tool needs, if any. Tools absent from this map are
@@ -117,6 +119,55 @@ Rules:
 - Follow the tool's stated argument names exactly."""
 
 
+def _dig(payload: Any, path: str) -> Any:
+    """Walk a dotted path into an observation record, or None."""
+    current = payload
+    for segment in path.split("."):
+        if isinstance(current, dict):
+            current = current.get(segment)
+        else:
+            return None
+    return current
+
+
+def resolve_refs(value: Any, observations: dict[int, dict[str, Any]]) -> Any:
+    """Substitute {"$from_step": n, "path": ...} with real observed values.
+
+    Recipes are written before any step has run, so they reference results
+    positionally. Resolution happens immediately before invocation, which means
+    a step always receives concrete data — never a placeholder that some tool
+    then has to interpret.
+    """
+    if isinstance(value, dict):
+        if "$from_step" in value:
+            record = observations.get(int(value["$from_step"]))
+            if record is None or not record.get("ok"):
+                return None
+            return _dig(record, value.get("path", "data"))
+
+        if "$from_steps" in value:
+            collected = []
+            for step_id in value["$from_steps"]:
+                record = observations.get(int(step_id))
+                if record is None or not record.get("ok"):
+                    continue
+                found = _dig(record, value.get("path", "data"))
+                if found is None:
+                    continue
+                if isinstance(found, list):
+                    collected.extend(found)
+                else:
+                    collected.append(found)
+            return collected
+
+        return {k: resolve_refs(v, observations) for k, v in value.items()}
+
+    if isinstance(value, list):
+        return [resolve_refs(item, observations) for item in value]
+
+    return value
+
+
 @dataclass
 class RunState:
     run_id: str
@@ -126,6 +177,7 @@ class RunState:
     started_at: float = field(default_factory=time.time)
     task: TaskSpec | None = None
     plan: Plan | None = None
+    values: Any = None
     observations: dict[int, dict[str, Any]] = field(default_factory=dict)
     artifacts: list[dict[str, Any]] = field(default_factory=list)
     replans: int = 0
@@ -275,6 +327,41 @@ class AgentRunner:
     def _plan(self, state: RunState, task: TaskSpec) -> Plan:
         bus.publish(state.run_id, "stage.started", {"stage": "plan"})
 
+        # A recipe wins whenever one matches: control flow becomes code, and
+        # the ~55s freehand planning call is skipped entirely. Measured on this
+        # box, the flagship task went from 60s to 12s this way.
+        values = extract_values(state.prompt)
+        state.values = values
+
+        if values.warnings:
+            # An implausible parse means the extracted numbers cannot be
+            # trusted as recipe arguments. Fall back to freehand planning
+            # rather than compute confidently from a misread.
+            bus.publish(state.run_id, "extract.warning", {
+                "warnings": values.warnings,
+                "extracted": values.as_dict(),
+                "action": "recipe declined, falling back to freehand planning",
+            })
+            recipe = None
+        else:
+            recipe = select_recipe(task, values)
+
+        if recipe is not None:
+            plan = build_plan(recipe, state.prompt, task, values)
+            plan = self._sanitise_plan(state, plan)
+            bus.publish(state.run_id, "plan.created", {
+                "source": "recipe",
+                "recipe": recipe.name,
+                "goal": plan.goal,
+                "steps": [s.model_dump(mode="json") for s in plan.steps],
+                "extracted": values.as_dict(),
+                "duration_s": 0.0,
+            })
+            return plan
+
+        return self._plan_freehand(state, task, values)
+
+    def _plan_freehand(self, state: RunState, task: TaskSpec, values: Any) -> Plan:
         model = self._route(
             state.run_id,
             routing_request_for("plan"),
@@ -293,11 +380,14 @@ class AgentRunner:
         if task.needs_code:
             required.append("write and verify code (use code.run)")
 
+        evidence = values.as_prompt_evidence() if values else ""
+
         user = (
             f"Request: {state.prompt}\n\n"
             f"Classified as: {task.kind.value}\n"
             f"Expected deliverable: {task.deliverable}\n"
             + (f"This task must: {'; '.join(required)}.\n" if required else "")
+            + (f"{evidence}\n" if evidence else "")
             + f"\nAvailable tools:\n{tools.describe_for_planner()}\n\n"
             "Produce the plan."
         )
@@ -315,6 +405,8 @@ class AgentRunner:
         plan = self._sanitise_plan(state, plan)
 
         bus.publish(state.run_id, "plan.created", {
+            "source": "freehand",
+            "recipe": None,
             "model": model,
             "goal": plan.goal,
             "steps": [s.model_dump(mode="json") for s in plan.steps],
@@ -433,8 +525,13 @@ missing, supply them from the original request. Do not change the tool."""
         return repaired
 
     def _execute_step(self, state: RunState, step: PlanStep, index: int) -> dict[str, Any]:
+        # Recipe steps reference earlier results positionally; resolve them to
+        # concrete values now, before anything is invoked or validated.
+        resolved_args = resolve_refs(step.args, state.observations)
+
         bus.publish(state.run_id, "step.started", {
-            "id": step.id, "tool": step.tool, "why": step.why, "args": step.args,
+            "id": step.id, "tool": step.tool, "why": step.why,
+            "args": resolved_args,
         })
 
         model_used: str | None = None
@@ -455,7 +552,7 @@ missing, supply them from the original request. Do not change the tool."""
             workspace=state.workspace,
             emit=lambda t, p: bus.publish(state.run_id, t, p),
         )
-        observation = tools.invoke(step.tool, ctx, step.args, DEFAULT_GRANTS)
+        observation = tools.invoke(step.tool, ctx, resolved_args, DEFAULT_GRANTS)
 
         # A rejected call is usually a malformed argument, not a bad idea.
         # One bounded repair attempt before the step is written off.
@@ -464,8 +561,11 @@ missing, supply them from the original request. Do not change the tool."""
                 state, step, observation.error or observation.summary
             )
             if repaired is not None:
+                resolved_args = resolve_refs(repaired.args, state.observations)
                 step.args = repaired.args
-                observation = tools.invoke(step.tool, ctx, step.args, DEFAULT_GRANTS)
+                observation = tools.invoke(
+                    step.tool, ctx, resolved_args, DEFAULT_GRANTS
+                )
 
         record = {
             "id": step.id,

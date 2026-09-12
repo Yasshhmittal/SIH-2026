@@ -81,6 +81,42 @@ def _normalise_formula_name(name: str) -> str:
     return name.strip().lower().replace(" ", "_").replace("-", "_")
 
 
+def _interpret(formula: str | None, value: float, variables: dict[str, float]) -> dict[str, Any]:
+    """Attach domain meaning to a result.
+
+    A raw negative remaining life is arithmetically correct and operationally
+    unhelpful: it means the component has *already* passed its retirement
+    limit, so "time until retirement" is zero and the deficiency is present
+    now. Reporting -1.667 years in an approval note invites a reader to think
+    the calculation is broken.
+    """
+    if formula == "remaining_life":
+        if value < 0:
+            return {
+                "interpretation": "already below retirement limit",
+                "detail": (
+                    "Measured thickness is already below the retirement limit, "
+                    "so no service life remains. This is a present deficiency, "
+                    "not a future one."
+                ),
+                "severity": "critical",
+                "reported_value": 0.0,
+            }
+        return {"interpretation": "positive remaining life",
+                "severity": "monitor" if value > 2 else "high"}
+
+    if formula == "corrosion_rate":
+        rate = value
+        if rate < 0:
+            return {"interpretation": "thickness increased",
+                    "detail": "Measured exceeds nominal; check the survey data.",
+                    "severity": "review"}
+        return {"interpretation": f"{rate:.3g} mm/yr uniform loss",
+                "severity": "low" if rate < 0.05 else ("medium" if rate < 0.25 else "high")}
+
+    return {}
+
+
 def _formula_catalogue() -> str:
     """Signatures for the planner, with a concrete example per formula.
 
@@ -172,6 +208,22 @@ def calc_evaluate(
         except Exception:
             pretty = f"{value:.4g} {result_unit}"
 
+    meaning = _interpret(formula, value, variables)
+
+    # When a formula has a domain interpretation that overrides the raw number
+    # (a negative remaining life means "already retired"), the summary and the
+    # reported value carry the interpretation, not the arithmetic.
+    reported = meaning.get("reported_value", value)
+    if "interpretation" in meaning and formula == "remaining_life" and value < 0:
+        pretty = "0 (already below retirement limit)"
+
+    steps = steps + (
+        [{"stage": "interpretation", "text": meaning["detail"]}]
+        if meaning.get("detail") else
+        ([{"stage": "interpretation", "text": meaning["interpretation"]}]
+         if meaning.get("interpretation") else [])
+    )
+
     return Observation(
         ok=True,
         summary=f"{formula or 'expression'} = {pretty}",
@@ -181,9 +233,11 @@ def calc_evaluate(
             "description": description,
             "variables": variables,
             "value": value,
+            "reported_value": reported,
             "unit": result_unit,
             "formatted": pretty,
             "steps": steps,
+            "interpretation": meaning,
         },
     )
 

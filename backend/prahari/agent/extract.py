@@ -18,13 +18,14 @@ from typing import Any
 _MM = r"(\d+(?:\.\d+)?)\s*(?:mm|millimet(?:er|re)s?)"
 _YEARS = r"(\d+(?:\.\d+)?)\s*(?:years?|yrs?)"
 
-# Phrases that label a thickness, so we can tell nominal from measured from
-# minimum. Ordered by specificity: the most explicit label wins.
+# Phrases that label a thickness. Word boundaries are essential: without them
+# "min" matches inside "Nominal", which silently swaps the measured and
+# minimum readings and corrupts every downstream calculation.
 _THICKNESS_LABELS: list[tuple[str, str]] = [
-    (r"nominal(?:\s+(?:wall|thickness))?", "nominal_thickness_mm"),
-    (r"(?:minimum|min|retirement|allowed|allowable)(?:\s+(?:wall|thickness))?",
+    (r"\bnominal\b(?:\s+(?:wall|thickness))?", "nominal_thickness_mm"),
+    (r"\b(?:minimum|min|retirement|allowed|allowable|limit)\b(?:\s+(?:wall|thickness))?",
      "minimum_thickness_mm"),
-    (r"(?:measured|actual|latest|current|ut\s+reading|reading|observed)",
+    (r"\b(?:measured|actual|latest|current|ut\s+reading|reading|observed|survey)\b",
      "measured_thickness_mm"),
 ]
 
@@ -43,6 +44,7 @@ class ExtractedValues:
     equipment_tag: str | None = None
     line_number: str | None = None
     other_thicknesses: list[float] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
 
     def as_dict(self) -> dict[str, Any]:
         return {
@@ -74,48 +76,68 @@ class ExtractedValues:
         )
 
 
-def _accumulate_thicknesses(text: str) -> dict[str, float]:
-    """Attribute each stated thickness to its nearest preceding label."""
-    assignments: dict[str, float] = {}
+def _accumulate_thicknesses(text: str) -> tuple[dict[str, float], list[float]]:
+    """Attribute each stated thickness to its NEAREST preceding label.
+
+    Proximity, not list order. "Nominal wall was 8.0 mm, the latest UT reading
+    is 5.9 mm, minimum allowed is 6.4 mm" has three labels in one sentence, and
+    taking the first matching pattern rather than the closest one assigns 5.9
+    to whichever label happens to sit earlier in the list.
+
+    Each number claims its nearest label; where two numbers claim the same
+    label, the closer one keeps it.
+    """
+    # (key, value, distance-from-number)
+    claims: list[tuple[str, float, int]] = []
+    unlabelled: list[float] = []
+
     for match in re.finditer(_MM, text, flags=re.IGNORECASE):
         value = float(match.group(1))
-        prefix = text[max(0, match.start() - 48):match.start()].lower()
+        window_start = max(0, match.start() - 60)
+        prefix = text[window_start:match.start()].lower()
 
-        assigned = False
+        best_key: str | None = None
+        best_end = -1
         for label_pattern, key in _THICKNESS_LABELS:
-            if key in assignments:
-                continue
-            if re.search(label_pattern, prefix):
-                assignments[key] = value
-                assigned = True
-                break
-        if not assigned and "unlabelled" not in assignments:
-            assignments["unlabelled"] = value
-    return assignments
+            for label in re.finditer(label_pattern, prefix):
+                if label.end() > best_end:
+                    best_end, best_key = label.end(), key
+
+        if best_key is None:
+            unlabelled.append(value)
+        else:
+            claims.append((best_key, value, len(prefix) - best_end))
+
+    assignments: dict[str, float] = {}
+    distances: dict[str, int] = {}
+    for key, value, distance in claims:
+        if key not in assignments or distance < distances[key]:
+            assignments[key] = value
+            distances[key] = distance
+
+    return assignments, unlabelled
 
 
 def extract_values(prompt: str) -> ExtractedValues:
     text = prompt
 
-    thicknesses = _accumulate_thicknesses(text)
+    thicknesses, unlabelled = _accumulate_thicknesses(text)
     result = ExtractedValues(
         nominal_thickness_mm=thicknesses.get("nominal_thickness_mm"),
         measured_thickness_mm=thicknesses.get("measured_thickness_mm"),
         minimum_thickness_mm=thicknesses.get("minimum_thickness_mm"),
     )
 
-    # Unlabelled values fill the obvious gaps: the largest is nominal, the
-    # smallest is the floor. This is a fallback, never an override.
-    unlabelled = thicknesses.get("unlabelled")
-    if unlabelled is not None:
+    # Unlabelled values fill gaps in order. A fallback, never an override.
+    for value in unlabelled:
         if result.nominal_thickness_mm is None:
-            result.nominal_thickness_mm = unlabelled
+            result.nominal_thickness_mm = value
         elif result.measured_thickness_mm is None:
-            result.measured_thickness_mm = unlabelled
+            result.measured_thickness_mm = value
         elif result.minimum_thickness_mm is None:
-            result.minimum_thickness_mm = unlabelled
+            result.minimum_thickness_mm = value
         else:
-            result.other_thicknesses.append(unlabelled)
+            result.other_thicknesses.append(value)
 
     years = re.search(_YEARS, text, flags=re.IGNORECASE)
     if years:
@@ -137,4 +159,32 @@ def extract_values(prompt: str) -> ExtractedValues:
     if line:
         result.line_number = line.group(1)
 
+    result.warnings = _check_plausibility(result)
     return result
+
+
+def _check_plausibility(values: ExtractedValues) -> list[str]:
+    """Flag physically implausible attributions rather than silently fixing them.
+
+    Nominal is the as-built thickness, so it must be the largest of the three.
+    A violation means the labels were attributed wrongly — and a wrong
+    attribution produces a confident, wrong corrosion rate, which is exactly
+    the failure this system exists to prevent. Reordering the values here would
+    hide the parse error; surfacing it lets the caller decline the recipe.
+    """
+    warnings: list[str] = []
+    nominal = values.nominal_thickness_mm
+    measured = values.measured_thickness_mm
+    minimum = values.minimum_thickness_mm
+
+    if nominal is not None and measured is not None and measured > nominal:
+        warnings.append(
+            f"measured ({measured} mm) exceeds nominal ({nominal} mm) — "
+            "thickness labels may have been misread"
+        )
+    if nominal is not None and minimum is not None and minimum > nominal:
+        warnings.append(
+            f"minimum ({minimum} mm) exceeds nominal ({nominal} mm) — "
+            "thickness labels may have been misread"
+        )
+    return warnings

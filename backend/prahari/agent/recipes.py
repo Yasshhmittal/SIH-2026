@@ -107,6 +107,10 @@ def _build_thickness_note(
                     "variables": {
                         "t_measured": values.measured_thickness_mm,
                         "t_minimum": values.minimum_thickness_mm,
+                        # Definitional input: the formula needs a rate, and
+                        # this one must come from the previous step. Feeding it
+                        # the raw value (not reported_value) is correct here —
+                        # the arithmetic is unchanged by how we report it.
                         "corrosion_rate": from_step(2, "data.value"),
                     },
                 },
