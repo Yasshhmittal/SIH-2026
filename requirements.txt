@@ -1,0 +1,37 @@
+
+# NEBULA Prototype — Python dependencies
+# Using Ollama for model inference (Qwen2.5-7B, Qwen2.5-VL-7B, BGE-M3)
+# Using pip for PaddleOCR (already installed system-wide)
+
+# ── UI ────────────────────────────────────────────────────
+streamlit>=1.35.0
+
+# ── API server (React frontend bridge) ───────────────────
+# Thin FastAPI + WebSocket layer that wraps the existing run_agent
+# pipeline for the PRAHARÍ React frontend. No cloud — serves localhost only.
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+python-multipart>=0.0.9
+
+# ── PDF parsing ───────────────────────────────────────────
+PyMuPDF>=1.24.0
+
+# ── OCR (PaddleOCR already installed via pip) ─────────────
+# paddlepaddle and paddleocr — install separately if not already present
+# pip install paddlepaddle paddleocr
+
+# ── Ollama Python client (talks to local Ollama server) ───
+ollama>=0.4.0
+
+# ── Retrieval (no vector DB) ──────────────────────────────
+numpy>=1.26.0
+
+# ── Document generation ───────────────────────────────────
+python-docx>=1.1.2
+
+# ── Image handling ────────────────────────────────────────
+Pillow>=10.3.0
+
+# ── Misc utilities ────────────────────────────────────────
+python-dotenv>=1.0.0
+tqdm>=4.66.0

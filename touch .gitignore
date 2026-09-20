@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+
+# Virtual Environments
+.venv/
+venv/
+env/
+
+# Ollama
+*.gguf
+
+# Mac
+.DS_Store
+
+# Node
+node_modules/
+
+# IDE
+.vscode/
+.idea/

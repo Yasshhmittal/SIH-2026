@@ -1,0 +1,302 @@
+{"ts": "2026-09-11T23:53:57.251821", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-11T23:53:57.255186", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-11T23:53:57.255249", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-11T23:53:57.258274", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-11T23:53:57.258325", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-11T23:53:57.258363", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-11T23:53:57.406637", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-11T23:53:57.406743", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-11T23:53:57.497559", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-11T23:53:57.497656", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-11T23:54:11.242731", "event": "\u274c REASONING failed: Server disconnected without sending a response."}
+{"ts": "2026-09-11T23:55:51.717804", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-11T23:55:51.722083", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-11T23:55:51.722151", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-11T23:55:51.725118", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-11T23:55:51.725178", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-11T23:55:51.725223", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-11T23:55:51.872043", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-11T23:55:51.872104", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-11T23:55:52.787460", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-11T23:55:52.787535", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-11T23:56:31.379130", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-11T23:56:31.379296", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-11T23:56:31.379401", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 4 invalid citation(s)."}
+{"ts": "2026-09-11T23:56:31.379453", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-11T23:56:31.379495", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-11T23:57:17.863751", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-11T23:57:17.867059", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-11T23:57:17.867120", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-11T23:57:17.869923", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-11T23:57:17.869964", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-11T23:57:17.869999", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-11T23:57:18.016993", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-11T23:57:18.017056", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-11T23:57:18.930789", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-11T23:57:18.930875", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-11T23:57:54.641824", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-11T23:57:54.642002", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-11T23:57:54.642088", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-11T23:57:54.642131", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-11T23:57:54.707672", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260912_052754.docx"}
+{"ts": "2026-09-11T23:57:54.707741", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T00:28:19.854320", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T00:28:19.863970", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-12T00:28:19.864135", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T00:28:19.870347", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-12T00:28:19.870448", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T00:28:19.870500", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T00:28:20.018781", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T00:28:20.018835", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T00:28:20.932574", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-12T00:28:20.932730", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T00:29:02.267903", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T00:29:02.268226", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T00:29:02.268372", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-12T00:29:02.268450", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-12T00:29:02.338959", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260912_055902.docx"}
+{"ts": "2026-09-12T00:29:02.339024", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T00:44:11.935351", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T00:44:11.954450", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-12T00:44:11.954672", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T00:44:11.958327", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-12T00:44:11.958525", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T00:44:11.958632", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T00:44:12.173626", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T00:44:12.173946", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T00:44:14.131760", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-12T00:44:14.132558", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T00:44:54.775029", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T00:44:54.776057", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T00:44:54.776455", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-12T00:44:54.776734", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-12T00:44:54.869603", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260912_061454.docx"}
+{"ts": "2026-09-12T00:44:54.869923", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T00:51:21.983483", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T00:51:21.989376", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-12T00:51:21.989604", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T00:51:21.993038", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-12T00:51:21.993207", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T00:51:21.993328", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T00:51:22.175985", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T00:51:22.176308", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T00:51:24.085579", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-12T00:51:24.086025", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T00:52:04.268146", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T00:52:04.269213", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T00:52:04.269619", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-12T00:52:04.269785", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-12T00:52:04.339514", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260912_062204.docx"}
+{"ts": "2026-09-12T00:52:04.340856", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T01:08:34.676590", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T01:08:34.682571", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 2 pages | Vision: False"}
+{"ts": "2026-09-12T01:08:34.683113", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T01:08:34.686159", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T01:08:34.686435", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T01:08:34.686599", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T01:08:36.826238", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 1 chunks"}
+{"ts": "2026-09-12T01:08:36.826817", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T01:08:37.723801", "event": "\u2705 RETRIEVAL \u2014 Top 1 chunks: sop_2jjo85ge.pdf p.1 (0.72)"}
+{"ts": "2026-09-12T01:08:37.724404", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T01:09:13.469495", "event": "\u2705 REASONING \u2014 4 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T01:09:13.471446", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T01:09:13.471921", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-12T01:09:13.472272", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-12T01:09:13.498216", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260912_063913.docx"}
+{"ts": "2026-09-12T01:09:13.498591", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T01:21:19.139806", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T01:21:19.148583", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-12T01:21:19.149149", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T01:21:19.153507", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-12T01:21:19.153870", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T01:21:19.154196", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T01:21:19.302193", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T01:21:19.302481", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T01:21:21.278773", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-12T01:21:21.279173", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T01:22:00.349859", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T01:24:28.223567", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T01:24:28.255187", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-12T01:24:28.255546", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T01:24:28.258689", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-12T01:24:28.258988", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T01:24:28.259185", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T01:24:28.408631", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T01:24:28.408894", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T01:24:30.327621", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-12T01:24:30.327984", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T01:24:45.084858", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T01:24:45.091236", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-12T01:24:45.092103", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T01:24:45.096976", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-12T01:24:45.097819", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T01:24:45.098384", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T01:24:45.248190", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T01:24:45.248529", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T01:24:47.611336", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.78), SOP_MAINT_017.pdf p.1 (0.67), SOP_MAINT_017.pdf p.4 (0.62)"}
+{"ts": "2026-09-12T01:24:47.611788", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T01:25:08.186147", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T01:25:37.521340", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T01:25:37.521815", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T01:25:37.522117", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-12T01:25:37.522326", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-12T01:25:37.538675", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260912_065537.docx"}
+{"ts": "2026-09-12T01:25:37.538999", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T03:22:07.614673", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T03:22:07.675103", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 3 pages | Vision: False"}
+{"ts": "2026-09-12T03:22:07.675894", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T03:22:07.689441", "event": "\u2705 OCR \u2014 3 pages extracted"}
+{"ts": "2026-09-12T03:22:07.690183", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T03:22:07.690786", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T03:22:08.250208", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T03:22:08.251132", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T03:22:15.398354", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.3 (0.75), SOP_MAINT_017.pdf p.1 (0.65), SOP_MAINT_017.pdf p.4 (0.61)"}
+{"ts": "2026-09-12T03:22:15.405374", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T03:24:57.791543", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T03:24:57.794799", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T03:24:57.796265", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-12T03:24:57.796919", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-12T03:24:58.547871", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260912_085458.docx"}
+{"ts": "2026-09-12T03:24:58.549352", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T03:29:59.237038", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T03:29:59.282310", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T03:29:59.282572", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T03:29:59.286891", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T03:29:59.287195", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T03:29:59.287410", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T03:29:59.464786", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T03:29:59.465048", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T03:30:01.666870", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.58), SOP_MAINT_017.pdf p.3 (0.54), SOP_MAINT_017.pdf p.1 (0.52)"}
+{"ts": "2026-09-12T03:30:01.667104", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T03:30:39.927404", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T03:30:39.928150", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T03:30:39.928423", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 4 invalid citation(s)."}
+{"ts": "2026-09-12T03:30:39.928630", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-12T03:30:39.928800", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T03:30:56.132381", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T03:30:56.173954", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T03:30:56.174214", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T03:30:56.178707", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T03:30:56.179075", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T03:30:56.179296", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T03:30:56.354542", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T03:30:56.354783", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T03:30:58.362688", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.58), SOP_MAINT_017.pdf p.3 (0.54), SOP_MAINT_017.pdf p.1 (0.52)"}
+{"ts": "2026-09-12T03:30:58.363708", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T03:31:30.799236", "event": "\u274c REASONING failed: Server disconnected without sending a response."}
+{"ts": "2026-09-12T03:34:32.326530", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T03:34:32.336822", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T03:34:32.337025", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T03:34:32.340278", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T03:34:32.340424", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T03:34:32.340616", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T03:34:32.585729", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T03:34:32.586066", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T03:34:34.632152", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.60), SOP_MAINT_017.pdf p.3 (0.55), SOP_MAINT_017.pdf p.1 (0.54)"}
+{"ts": "2026-09-12T03:34:34.632507", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T03:35:19.754637", "event": "\u2705 REASONING \u2014 5 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T03:35:19.755564", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T03:35:19.756078", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 5 invalid citation(s)."}
+{"ts": "2026-09-12T03:35:19.756256", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-12T03:35:19.756449", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T03:41:04.961601", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T03:41:04.977953", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T03:41:04.978139", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T03:41:04.981893", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T03:41:04.982461", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T03:41:04.982882", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T03:41:05.221318", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T03:41:05.221582", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T03:41:07.212183", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.60), SOP_MAINT_017.pdf p.3 (0.55), SOP_MAINT_017.pdf p.1 (0.54)"}
+{"ts": "2026-09-12T03:41:07.212650", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T03:41:51.041329", "event": "\u2705 REASONING \u2014 5 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T03:41:51.042213", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T03:41:51.042747", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 6 invalid citation(s)."}
+{"ts": "2026-09-12T03:41:51.043455", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-12T03:41:51.043896", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T03:48:53.683321", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T03:48:53.695095", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T03:48:53.695743", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T03:48:53.702094", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T03:48:53.702701", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T03:48:53.703182", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T03:48:53.865436", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T03:48:53.865732", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T03:48:55.765045", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.58), SOP_MAINT_017.pdf p.3 (0.54), SOP_MAINT_017.pdf p.1 (0.52)"}
+{"ts": "2026-09-12T03:48:55.765440", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T03:49:32.101416", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T03:49:32.102174", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T03:49:32.102503", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 4 invalid citation(s)."}
+{"ts": "2026-09-12T03:49:32.102640", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-12T03:49:32.102811", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T04:57:37.049939", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T04:57:37.081211", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T04:57:37.081762", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T04:57:37.089785", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T04:57:37.090512", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T04:57:37.091305", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T04:57:37.488889", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T04:57:37.489675", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T04:57:40.700636", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.58), SOP_MAINT_017.pdf p.3 (0.54), SOP_MAINT_017.pdf p.1 (0.52)"}
+{"ts": "2026-09-12T04:57:40.701528", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T05:03:26.788350", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T05:03:26.808383", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T05:03:26.808683", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T05:03:26.812953", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T05:03:26.813167", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T05:03:26.813361", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T05:03:27.052605", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T05:03:27.052891", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T05:03:29.099378", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.58), SOP_MAINT_017.pdf p.3 (0.54), SOP_MAINT_017.pdf p.1 (0.52)"}
+{"ts": "2026-09-12T05:03:29.100036", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T05:04:09.130912", "event": "\u2705 REASONING \u2014 5 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T05:04:09.131787", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T05:04:09.132038", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 6 invalid citation(s)."}
+{"ts": "2026-09-12T05:04:09.132198", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-12T05:04:09.133043", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T05:21:50.588635", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T05:21:50.598259", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T05:21:50.598866", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T05:21:50.604831", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T05:21:50.605365", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T05:21:50.605760", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T05:21:50.760964", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T05:21:50.761230", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T05:21:52.692296", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.58), SOP_MAINT_017.pdf p.3 (0.54), SOP_MAINT_017.pdf p.1 (0.52)"}
+{"ts": "2026-09-12T05:21:52.692599", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T05:22:24.181385", "event": "\u2705 REASONING \u2014 3 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T05:22:24.182436", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T05:22:24.182897", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 4 invalid citation(s)."}
+{"ts": "2026-09-12T05:22:24.183134", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-12T05:22:24.183332", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-12T05:37:26.385770", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-12T05:37:26.417605", "event": "\u2705 CLASSIFY \u2014 Unknown | 2 pages | Vision: False"}
+{"ts": "2026-09-12T05:37:26.418476", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-12T05:37:26.427045", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-12T05:37:26.427649", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-12T05:37:26.427977", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-12T05:37:26.830143", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 5 chunks"}
+{"ts": "2026-09-12T05:37:26.831067", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-12T05:37:29.732386", "event": "\u2705 RETRIEVAL \u2014 Top 3 chunks: SOP_MAINT_017.pdf p.4 (0.58), SOP_MAINT_017.pdf p.3 (0.54), SOP_MAINT_017.pdf p.1 (0.52)"}
+{"ts": "2026-09-12T05:37:29.732821", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-12T05:38:18.955893", "event": "\u2705 REASONING \u2014 5 supported findings | 1 uncertainties"}
+{"ts": "2026-09-12T05:38:18.957606", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-12T05:38:18.958029", "event": "\u26a0\ufe0f  VALIDATION \u2014 Failed: 6 invalid citation(s)."}
+{"ts": "2026-09-12T05:38:18.958235", "event": "\ud83d\udeab DOCX skipped \u2014 validation did not pass. Explicit insufficiency noted."}
+{"ts": "2026-09-12T05:38:18.958424", "event": "\ud83c\udfc1 Agent pipeline complete."}
+{"ts": "2026-09-20T04:32:30.424149", "event": "\u2699\ufe0f  CLASSIFY \u2014 Analysing document type..."}
+{"ts": "2026-09-20T04:32:30.435679", "event": "\u2705 CLASSIFY \u2014 Inspection Review | 2 pages | Vision: False"}
+{"ts": "2026-09-20T04:32:30.436080", "event": "\ud83d\udcc4 OCR \u2014 Extracting document text..."}
+{"ts": "2026-09-20T04:32:30.440438", "event": "\u2705 OCR \u2014 2 pages extracted"}
+{"ts": "2026-09-20T04:32:30.440759", "event": "\u23ed\ufe0f  VISION \u2014 No visual content detected; step skipped"}
+{"ts": "2026-09-20T04:32:30.441093", "event": "\ud83d\udcda RETRIEVAL \u2014 Loading SOP index..."}
+{"ts": "2026-09-20T04:32:33.523579", "event": "\u2705 RETRIEVAL \u2014 SOP indexed: 1 chunks"}
+{"ts": "2026-09-20T04:32:33.524186", "event": "\ud83d\udd0e RETRIEVAL \u2014 Finding relevant SOP evidence..."}
+{"ts": "2026-09-20T04:32:35.219983", "event": "\u2705 RETRIEVAL \u2014 Top 1 chunks: sop_obvqfo5t.pdf p.1 (0.70)"}
+{"ts": "2026-09-20T04:32:35.220621", "event": "\ud83e\udde0 REASONING \u2014 Qwen2.5-7B grounded analysis..."}
+{"ts": "2026-09-20T04:34:40.913726", "event": "\u2705 REASONING \u2014 6 supported findings | 1 uncertainties"}
+{"ts": "2026-09-20T04:34:40.917445", "event": "\u2714\ufe0f  VALIDATION \u2014 Checking grounding and citations..."}
+{"ts": "2026-09-20T04:34:40.919185", "event": "\u2705 VALIDATION \u2014 Passed | Unsupported: 0"}
+{"ts": "2026-09-20T04:34:40.919691", "event": "\ud83d\udcdd DOCX \u2014 Generating approval note..."}
+{"ts": "2026-09-20T04:34:41.160235", "event": "\u2705 DOCX \u2014 Saved: output/Approval_Note_20260920_100441.docx"}
+{"ts": "2026-09-20T04:34:41.161053", "event": "\ud83c\udfc1 Agent pipeline complete."}
