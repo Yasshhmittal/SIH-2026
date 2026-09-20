@@ -45,6 +45,7 @@ TOOL_ROLE: dict[str, str] = {
     "vision.ask": "vision",
     "ocr.page": "vision",
     "code.run": "code",
+    "llm.write": "write",
 }
 
 # Realistic (prompt, output) token estimates per role. These drive the router's
@@ -116,7 +117,9 @@ Rules:
 - Reference earlier steps through depends_on, not by copying their output.
 - Arguments must be concrete values taken from the request, not descriptions
   of values. If the request states a number, put that number in the args.
-- Follow the tool's stated argument names exactly."""
+- Follow the tool's stated argument names exactly.
+- CRITICAL: If the task needs information from documents, kb.search MUST be
+  the FIRST step. Never call docx.render without calling kb.search first."""
 
 
 def _dig(payload: Any, path: str) -> Any:
@@ -183,6 +186,7 @@ class RunState:
     replans: int = 0
     tokens: int = 0
     cancelled: bool = False
+    history: list[dict[str, str]] = field(default_factory=list)
 
     @property
     def elapsed(self) -> float:
@@ -216,17 +220,30 @@ class AgentRunner:
         self._residency._registry = self._registry  # keep the manager in sync
         return self._registry
 
-    def start(self, prompt: str, org_id: str = "mrpl") -> str:
+    def start(self, prompt: str, org_id: str = "mrpl",
+              history: list[dict[str, str]] | None = None) -> str:
         run_id = uuid.uuid4().hex[:12]
         workspace = ORGS_DIR / org_id / "workspace" / run_id
         workspace.mkdir(parents=True, exist_ok=True)
 
         state = RunState(run_id=run_id, org_id=org_id, prompt=prompt,
-                         workspace=workspace)
+                         workspace=workspace, history=history or [])
         self._runs[run_id] = state
 
         threading.Thread(target=self._execute, args=(state,), daemon=True).start()
         return run_id
+
+    @staticmethod
+    def _history_messages(history: list[dict[str, str]],
+                          max_turns: int = 6) -> list[dict[str, str]]:
+        """Convert the conversation history into chat messages for the LLM.
+
+        Keeps only the last `max_turns` exchanges to stay within context
+        budgets. Each entry in `history` has {role, content}.
+        """
+        # Take only the most recent turns
+        recent = history[-(max_turns * 2):] if history else []
+        return [{"role": h["role"], "content": h["content"]} for h in recent]
 
     def cancel(self, run_id: str) -> bool:
         state = self._runs.get(run_id)
@@ -292,12 +309,13 @@ class AgentRunner:
         evidence = signals.as_prompt_evidence()
         user = state.prompt if not evidence else f"{state.prompt}\n\n[{evidence}]"
 
+        messages = [{"role": "system", "content": CLASSIFY_SYSTEM}]
+        messages.extend(self._history_messages(state.history, max_turns=3))
+        messages.append({"role": "user", "content": user})
+
         gen = self._client.chat(
             model,
-            [
-                {"role": "system", "content": CLASSIFY_SYSTEM},
-                {"role": "user", "content": user},
-            ],
+            messages,
             schema=schema_of(TaskSpec),
             temperature=0.0,
             num_predict=320,
@@ -392,11 +410,16 @@ class AgentRunner:
             "Produce the plan."
         )
 
+        history_msgs = self._history_messages(state.history, max_turns=4)
+
         for attempt in range(3):
+            plan_messages = [{"role": "system", "content": PLAN_SYSTEM}]
+            plan_messages.extend(history_msgs)
+            plan_messages.append({"role": "user", "content": user})
+
             gen = self._client.chat(
                 model,
-                [{"role": "system", "content": PLAN_SYSTEM},
-                 {"role": "user", "content": user}],
+                plan_messages,
                 schema=schema_of(Plan),
                 temperature=0.4,
                 num_predict=1400,
@@ -624,12 +647,13 @@ missing, supply them from the original request. Do not change the tool."""
         )
         user_prompt = f"Context:\n{context_text}\n\nQuestion: {state.prompt}"
 
+        messages = [{"role": "system", "content": system}]
+        messages.extend(self._history_messages(state.history, max_turns=6))
+        messages.append({"role": "user", "content": user_prompt})
+
         gen = self._client.chat(
             model,
-            [
-                {"role": "system", "content": system},
-                {"role": "user", "content": user_prompt},
-            ],
+            messages,
         )
         state.tokens += gen.prompt_tokens + gen.output_tokens
         return gen.text

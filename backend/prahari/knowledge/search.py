@@ -77,6 +77,7 @@ def search_knowledge(
         })
 
     retrieval = "hybrid (BM25 + dense)" if query_vector is not None else "BM25 only"
+    chunk_texts = [f"[{c['id']}: {c['document']}] {c['text']}" for c in chunks]
     return Observation(
         ok=True,
         summary=f"retrieved {len(hits)} chunk(s) via {retrieval} from "
@@ -84,6 +85,7 @@ def search_knowledge(
         data={
             "query": query,
             "chunks": chunks,
+            "chunk_texts": chunk_texts,
             "citations": citations,
             "retrieval": retrieval,
             "searched_documents": stats["documents"],

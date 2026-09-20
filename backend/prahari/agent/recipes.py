@@ -199,6 +199,66 @@ def _build_sop_question(
     ]
 
 
+# ------------------------------------------ generic docx from knowledge ---
+
+def _matches_docx_from_knowledge(task: TaskSpec, values: ExtractedValues) -> bool:
+    """Match any docx request that needs retrieval but didn't match a more
+    specific recipe (like thickness_deficiency). This ensures kb.search
+    always runs before docx.render."""
+    return (
+        task.deliverable == "docx"
+        and task.needs_retrieval
+    )
+
+
+def _build_docx_from_knowledge(
+    prompt: str, task: TaskSpec, values: ExtractedValues
+) -> list[PlanStep]:
+    """Search the knowledge base, synthesize the information, then render a document."""
+    subject = values.equipment_tag or values.line_number or ""
+    search_query = " ".join(
+        part for part in [prompt[:200], subject] if part
+    ).strip()
+
+    title = task.summary[:80] if task.summary else "Report"
+
+    return [
+        PlanStep(
+            id=1,
+            tool="kb.search",
+            why="Retrieve relevant information from organisation documents",
+            args={"query": search_query, "k": 8},
+        ),
+        PlanStep(
+            id=2,
+            tool="llm.write",
+            why="Draft the report based on the retrieved information",
+            args={
+                "prompt": prompt,
+                "context": from_step(1, "data.chunk_texts"),
+            },
+            depends_on=[1],
+        ),
+        PlanStep(
+            id=3,
+            tool="docx.render",
+            why="Produce the final document",
+            args={
+                "title": title,
+                "summary": f"Generated in response to: {prompt[:200]}",
+                "sections": [
+                    {
+                        "heading": "Insights & Summary",
+                        "paragraphs": [from_step(2, "data.drafted_text")],
+                    }
+                ],
+                "citations": from_step(1, "data.citations"),
+            },
+            depends_on=[1, 2],
+        ),
+    ]
+
+
 # --------------------------------------------------------------- registry ---
 
 RECIPES: list[Recipe] = [
@@ -216,6 +276,12 @@ RECIPES: list[Recipe] = [
         description="Answer a question from the organisation's SOPs, with citations",
         matches=_matches_sop_question,
         build=_build_sop_question,
+    ),
+    Recipe(
+        name="docx_from_knowledge",
+        description="Draft a document using information retrieved from the organisation's knowledge base",
+        matches=_matches_docx_from_knowledge,
+        build=_build_docx_from_knowledge,
     ),
 ]
 

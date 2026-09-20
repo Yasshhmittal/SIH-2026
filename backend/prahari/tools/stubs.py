@@ -96,6 +96,7 @@ _STUBS = [
         capabilities=frozenset({CAP_KB_READ}),
         handler=ocr_page,
         returns="page text with per-region confidence",
+        planner_visible=False,
     ),
     ToolSpec(
         name="vision.ask",
@@ -111,6 +112,7 @@ _STUBS = [
         capabilities=frozenset({CAP_VISION}),
         handler=vision_ask,
         returns="answer grounded in the image region",
+        planner_visible=False,
     ),
     ToolSpec(
         name="code.run",

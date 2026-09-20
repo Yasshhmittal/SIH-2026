@@ -132,13 +132,15 @@ def route_preview(body: RoutePreview) -> dict[str, Any]:
 class StartRun(BaseModel):
     prompt: str
     org_id: str = "mrpl"
+    history: list[dict[str, str]] = []
 
 
 @router.post("/runs")
 def start_run(body: StartRun) -> dict[str, str]:
     if not body.prompt.strip():
         raise HTTPException(status_code=400, detail="prompt is empty")
-    run_id = get_runner().start(body.prompt.strip(), org_id=body.org_id)
+    run_id = get_runner().start(body.prompt.strip(), org_id=body.org_id,
+                                history=body.history)
     return {"run_id": run_id}
 
 
