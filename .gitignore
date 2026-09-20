@@ -8,15 +8,6 @@ venv/
 .mypy_cache/
 .ruff_cache/
 
-# --- runtime data: run workspaces, artifacts, indexes ---
-# Structure is kept (see data/orgs/.gitkeep); generated content is not.
-data/orgs/*/workspace/
-data/orgs/*/kb/
-data/runtime/
-*.sqlite
-*.sqlite3
-*.db
-
 # --- secrets ---
 .env
 *.env
@@ -28,13 +19,6 @@ frontend/dist/
 frontend/.vite/
 npm-debug.log*
 yarn-error.log*
-
-# --- editors / os ---
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-desktop.ini
 
 # --- scratch ---
 *.log
