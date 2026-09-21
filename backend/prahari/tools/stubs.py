@@ -81,54 +81,7 @@ _STUBS = [
         capabilities=frozenset({CAP_KB_READ}),
         handler=kb_search,
         returns="list of chunks with doc, page and bbox for citation",
-    ),
-    ToolSpec(
-        name="ocr.page",
-        description="Extract text from one page of a scanned document.",
-        args_schema={
-            "type": "object",
-            "properties": {
-                "document": {"type": "string", "description": "Document id or filename"},
-                "page": {"type": "integer", "description": "1-based page number"},
-            },
-            "required": ["document"],
-        },
-        capabilities=frozenset({CAP_KB_READ}),
-        handler=ocr_page,
-        returns="page text with per-region confidence",
-        planner_visible=False,
-    ),
-    ToolSpec(
-        name="vision.ask",
-        description="Ask a question about an image, drawing or scanned page.",
-        args_schema={
-            "type": "object",
-            "properties": {
-                "image": {"type": "string", "description": "Image path or document page ref"},
-                "question": {"type": "string", "description": "What to ask about it"},
-            },
-            "required": ["image", "question"],
-        },
-        capabilities=frozenset({CAP_VISION}),
-        handler=vision_ask,
-        returns="answer grounded in the image region",
-        planner_visible=False,
-    ),
-    ToolSpec(
-        name="code.run",
-        description="Run Python in an isolated sandbox with no network. Returns output.",
-        args_schema={
-            "type": "object",
-            "properties": {
-                "code": {"type": "string", "description": "Python source to execute"},
-                "tests": {"type": "string", "description": "Optional pytest source"},
-            },
-            "required": ["code"],
-        },
-        capabilities=frozenset({CAP_EXEC_SANDBOX}),
-        handler=code_run,
-        returns="stdout, stderr, exit code",
-    ),
+    )
 ]
 
 for _spec in _STUBS:

@@ -128,34 +128,23 @@ export default function PromptInput({ onSubmit, disabled, status, orgId = "mrpl"
         style={{ display: "none" }}
       />
 
+      {/* File Upload Area */}
+      <div
+        className={`upload-area ${(notice && notice.done.length > 0) ? 'has-file' : ''}`}
+        onClick={() => fileInputRef.current?.click()}
+        style={{ opacity: busy ? 0.5 : 1, pointerEvents: busy ? "none" : "auto" }}
+      >
+        <div className="upload-icon">
+          {(notice && notice.done.length > 0) ? '✅' : '📁'}
+        </div>
+        <div className="upload-text">
+          {(notice && notice.done.length > 0)
+            ? 'Document uploaded successfully'
+            : 'Click to attach a document (PDF, Word, Excel, PPT, TXT) — or drop it here'}
+        </div>
+      </div>
+
       <div style={{ display: "flex", alignItems: "flex-end", gap: "0.75rem" }}>
-        <button
-          type="button"
-          disabled={busy}
-          onClick={() => fileInputRef.current?.click()}
-          className="btn"
-          style={{
-            flexShrink: 0,
-            height: "44px",
-            padding: "0 1.25rem",
-            borderRadius: "0.5rem",
-            background: "var(--glass-bg)",
-            border: "1px solid var(--glass-border)",
-            display: "flex",
-            alignItems: "center",
-            gap: "0.5rem",
-            color: "var(--text-primary)",
-            cursor: busy ? "not-allowed" : "pointer",
-            opacity: busy ? 0.5 : 1,
-            transition: "all 0.2s ease",
-          }}
-          onMouseEnter={(e) => { if(!busy) e.currentTarget.style.borderColor = "var(--accent-color)"; }}
-          onMouseLeave={(e) => { if(!busy) e.currentTarget.style.borderColor = "var(--glass-border)"; }}
-          title="Attach a document (PDF, Word, Excel, PowerPoint, text, CSV, image) — or drop it here"
-        >
-          <span>{uploading ? "⏳" : "📎"}</span>
-          <span style={{ fontSize: "0.9rem", fontWeight: 500 }}>Upload File</span>
-        </button>
         <textarea
           ref={textareaRef}
           value={text}

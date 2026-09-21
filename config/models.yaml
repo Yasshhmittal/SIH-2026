@@ -39,6 +39,16 @@ models:
     device: auto
     notes: "Balanced generalist. Preferred for drafting deliverables."
 
+  - id: qwen2.5:7b-instruct
+    roles: [reason, plan, write, summarize, classify, extract]
+    modalities: [text]
+    mem_mb: 4500
+    ctx: 32768
+    quality: 0.85
+    speed_tps: null
+    device: auto
+    notes: "High quality generalist. Default for 12GB+ GPUs."
+
   # ---------------------------------------------------------------- code ---
   - id: qwen2.5-coder:1.5b
     roles: [code]

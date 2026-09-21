@@ -8,9 +8,23 @@
 #
 # Switch with PRAHARI_PROFILE=<name>.
 
-active: cpu-dev
+active: gpu-12gb
 
 profiles:
+
+  gpu-12gb:
+    label: "RTX 12 GB"
+    accelerator: cuda
+    budget_mb: 11000
+    max_concurrent_models: 2
+    weights:
+      quality: 1.00
+      context: 0.30
+      latency: 0.20
+      swap: 0.40
+      pressure: 0.10
+    step_timeout_s: 90
+    prefetch: true
 
   # The machine this was built on: i7-14700HX, 20 cores, 16 GB RAM, no CUDA.
   # Budget is set to 6000 MB deliberately: it mirrors the 6 GB RTX 3050 target,

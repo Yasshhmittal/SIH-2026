@@ -154,6 +154,119 @@ def docx_render(
     )
 
 
+def xlsx_render(
+    ctx: ToolContext,
+    *,
+    title: str,
+    sheets: list[dict[str, Any]],
+    filename: str | None = None,
+) -> Observation:
+    """Build an Excel deliverable."""
+    from openpyxl import Workbook
+    wb = Workbook()
+    
+    # Remove default sheet
+    wb.remove(wb.active)
+    
+    for sheet_data in sheets:
+        sheet_name = sheet_data.get("name", "Sheet")
+        ws = wb.create_sheet(title=sheet_name[:31]) # Excel limits to 31 chars
+        
+        rows = sheet_data.get("rows", [])
+        for r_idx, row in enumerate(rows, 1):
+            if isinstance(row, list):
+                for c_idx, val in enumerate(row, 1):
+                    ws.cell(row=r_idx, column=c_idx, value=str(val) if val is not None else "")
+            elif isinstance(row, dict):
+                for c_idx, (k, val) in enumerate(row.items(), 1):
+                    # Write header on first row if we're passing dicts
+                    if r_idx == 1:
+                        ws.cell(row=1, column=c_idx, value=str(k))
+                        ws.cell(row=2, column=c_idx, value=str(val) if val is not None else "")
+                    else:
+                        ws.cell(row=r_idx+1, column=c_idx, value=str(val) if val is not None else "")
+                        
+    safe = filename or f"{title.lower().replace(' ', '_')[:48]}_{uuid.uuid4().hex[:6]}.xlsx"
+    if not safe.endswith(".xlsx"):
+        safe += ".xlsx"
+
+    out_dir = Path(ctx.workspace) / "artifacts"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / safe
+    wb.save(out_path)
+
+    return Observation(
+        ok=True,
+        summary=f"rendered {safe}",
+        data={
+            "artifact_kind": "xlsx",
+            "filename": safe,
+            "path": str(out_path),
+            "relative_path": f"artifacts/{safe}",
+            "title": title,
+        },
+    )
+
+
+def pptx_render(
+    ctx: ToolContext,
+    *,
+    title: str,
+    slides: list[dict[str, Any]],
+    filename: str | None = None,
+) -> Observation:
+    """Build a PowerPoint deliverable."""
+    from pptx import Presentation
+    prs = Presentation()
+    
+    # Title slide
+    title_slide_layout = prs.slide_layouts[0]
+    slide = prs.slides.add_slide(title_slide_layout)
+    title_shape = slide.shapes.title
+    subtitle = slide.placeholders[1]
+    title_shape.text = title
+    subtitle.text = f"Prepared {date.today().isoformat()}"
+    
+    # Content slides
+    bullet_slide_layout = prs.slide_layouts[1]
+    for slide_data in slides:
+        slide = prs.slides.add_slide(bullet_slide_layout)
+        shapes = slide.shapes
+        title_shape = shapes.title
+        body_shape = shapes.placeholders[1]
+        
+        title_shape.text = slide_data.get("title", "Slide")
+        
+        tf = body_shape.text_frame
+        points = slide_data.get("bullets", [])
+        if points:
+            tf.text = str(points[0])
+            for point in points[1:]:
+                p = tf.add_paragraph()
+                p.text = str(point)
+
+    safe = filename or f"{title.lower().replace(' ', '_')[:48]}_{uuid.uuid4().hex[:6]}.pptx"
+    if not safe.endswith(".pptx"):
+        safe += ".pptx"
+
+    out_dir = Path(ctx.workspace) / "artifacts"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / safe
+    prs.save(out_path)
+
+    return Observation(
+        ok=True,
+        summary=f"rendered {safe}",
+        data={
+            "artifact_kind": "pptx",
+            "filename": safe,
+            "path": str(out_path),
+            "relative_path": f"artifacts/{safe}",
+            "title": title,
+        },
+    )
+
+
 registry.register(
     ToolSpec(
         name="docx.render",
@@ -181,5 +294,49 @@ registry.register(
         capabilities=frozenset({CAP_RENDER}),
         handler=docx_render,
         returns="path to the generated .docx in the run workspace",
+    )
+)
+
+registry.register(
+    ToolSpec(
+        name="xlsx.render",
+        description="Create an Excel spreadsheet deliverable.",
+        args_schema={
+            "type": "object",
+            "properties": {
+                "title": {"type": "string", "description": "Spreadsheet title"},
+                "sheets": {
+                    "type": "array",
+                    "description": "List of sheets. Format: [{name, rows: [[col1, col2, ...]]}]"
+                },
+                "filename": {"type": "string", "description": "Optional output name"},
+            },
+            "required": ["title", "sheets"],
+        },
+        capabilities=frozenset({CAP_RENDER}),
+        handler=xlsx_render,
+        returns="path to the generated .xlsx in the run workspace",
+    )
+)
+
+registry.register(
+    ToolSpec(
+        name="pptx.render",
+        description="Create a PowerPoint presentation deliverable.",
+        args_schema={
+            "type": "object",
+            "properties": {
+                "title": {"type": "string", "description": "Presentation title"},
+                "slides": {
+                    "type": "array",
+                    "description": "List of slides. Format: [{title, bullets: [...]}]"
+                },
+                "filename": {"type": "string", "description": "Optional output name"},
+            },
+            "required": ["title", "slides"],
+        },
+        capabilities=frozenset({CAP_RENDER}),
+        handler=pptx_render,
+        returns="path to the generated .pptx in the run workspace",
     )
 )

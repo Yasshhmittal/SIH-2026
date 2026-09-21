@@ -234,3 +234,41 @@ p {
   pointer-events: none;
 }
 
+/* Upload Area */
+.upload-area {
+  border: 2px dashed var(--glass-border);
+  border-radius: 16px;
+  padding: 1.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  background: var(--glass-bg);
+  margin-bottom: 1rem;
+}
+
+.upload-area:hover {
+  border-color: var(--accent-color);
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.upload-area.has-file {
+  border-color: #22c55e;
+  background: rgba(34, 197, 94, 0.1);
+}
+
+.upload-icon {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.upload-text {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.upload-filename {
+  font-size: 0.8rem;
+  color: #22c55e;
+  font-weight: 600;
+  margin-top: 0.3rem;
+}
