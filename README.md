@@ -1,168 +1,323 @@
-# PRAHARI — sovereign on-premise agentic AI workbench
+# PRAHARI: Sovereign On-Premise Agentic AI Workbench
 
-**SIH 2026 · Problem SIH26117 · Mangalore Refinery & Petrochemicals Ltd · Team The Nebula**
+> **AI comes to your data — not the other way around.**
 
-AI comes to your data — not the other way around.
+<p align="center">
+  <img src="image.png" width="48%" alt="PRAHARI Architecture" />
+  &nbsp;
+  <img src="image-1.png" width="48%" alt="PRAHARI UI" />
+</p>
 
-An air-gapped agentic workbench for confidential industrial knowledge work: plans
-multi-step tasks, routes each step to the right local open-weight model, calls
-local tools, grounds every claim in the organisation's own SOPs, runs code in a
-network-isolated sandbox, and returns real files — Word, Excel, PowerPoint —
-without a single byte leaving the premises.
+PRAHARI is a self-hosted, air-gapped, agentic AI workbench built for confidential industrial work in refineries, PSUs, and defense units.
 
-Full design record: [`context.md`](context.md)
+## 1. Project Overview
 
----
+Refineries and defense units generate highly sensitive routine work—approval notes, P&ID reviews, engineering calculations, and vendor strategies. Because this data is confidential, using cloud AI assistants like Claude or ChatGPT poses severe data-exfiltration risks ("shadow AI").
 
-## Status
+PRAHARI solves this by bringing the AI to the data. It is a completely on-premise, multi-model AI assistant that plans multi-step work, interacts with local tools (sandbox, file I/O, deterministic math, internal document search), and generates real deliverables (Word, Excel, PPT files) without making a single external API call.
 
-| Plane | State |
-|---|---|
-| Model router + residency manager | **Working** — deterministic scoring, real swap measurement, live decision tables |
-| Agent loop (classify → plan → execute) | **Working** — schema-constrained decoding, bounded repair, recipes |
-| Deterministic calculation engine | **Working** — sympy + pint, units, full step list |
-| DOCX deliverable renderer | **Working** — real .docx from a typed spec |
-| Filesystem tools (jailed) | **Working** |
-| Knowledge plane (OCR, Qdrant, citations) | **Stubbed** — fixed seed corpus, P3 |
-| Sandbox code execution | **Stubbed** — P4 |
-| Security proof (egress guard, monitor, audit chain) | **Not built** — P6 |
-| Frontend | Prototype — Vite + React, streaming timeline wired |
+## 2. Key Features
 
----
+* **100% Sovereign & Air-Gapped:** Structural egress guards and `net=none` sandboxes ensure no data leaves the machine.
+* **Dynamic Model Routing:** Automatically loads and unloads open-weight models (Qwen2.5, Moondream, BGE-m3) per *step* of a task, governed by a strict VRAM budget manager.
+* **Agentic Workflows with Bounded Control:** The LLM fills parameters and judges outcomes, but the control flow and tool dispatch are executed by a strict Python DAG (Directed Acyclic Graph) loop.
+* **Hybrid Knowledge Retrieval:** Local indexing with SQLite using BM25 (sparse) and CPU-based BGE-m3 (dense) embeddings, fused via Reciprocal Rank Fusion (RRF).
+* **Deterministic Math Engine:** Uses `sympy` and `pint` for domain-specific formulas (e.g., corrosion rate) instead of hallucination-prone LLM arithmetic.
+* **Real Deliverables:** Compiles the agent's findings, calculations, and citations into natively formatted `.docx`, `.xlsx`, and `.pptx` files.
 
-## Quick start
+## 3. System Workflow
 
-Requires Python 3.11+, Ollama running locally, and the models pulled.
+1. **RECEIVE:** The system receives a user request and attachments via the frontend.
+2. **CLASSIFY:** A fast model classifies the intent, required modalities, and the expected deliverable type.
+3. **PLAN:** The agent generates a strict JSON-Schema-validated plan (or selects a predefined recipe template).
+4. **SELECT & EXECUTE (Iterative):** For each step in the plan, the router selects the best model, swaps it into VRAM if necessary, and executes the tool (e.g., `kb.search`, `calc.evaluate`, `ocr.page`).
+5. **OBSERVE & CRITIC:** The system observes the tool's output. If validation fails, the agent attempts a bounded repair.
+6. **SYNTHESIZE & DELIVER:** Once the plan is complete, the agent synthesizes the results and generates the final requested artifact (e.g., a Word Document).
 
+## 4. High-Level Architecture
+
+```mermaid
+graph TD
+    subgraph Frontend [Browser UI]
+        UI[React / Vite SPA]
+    end
+
+    subgraph Backend [FastAPI Control Plane]
+        API[API & SSE Router]
+        AgentLoop[Agent Loop & State]
+        ModelRouter[Model Router & VRAM Manager]
+    end
+
+    subgraph Tools [Tool Gateway]
+        Calc[Deterministic Math]
+        Sandbox[Docker Sandbox]
+        Deliverables[DOCX/XLSX/PPTX Render]
+        Vision[OCR Cascade]
+    end
+
+    subgraph Storage [Local Storage]
+        SQLite[(SQLite DB)]
+        DocStore[Workspace / Inbox]
+    end
+
+    subgraph AI [Inference Runtime]
+        Ollama[Ollama Server]
+        CPU[BGE-M3 Embeddings CPU]
+    end
+
+    UI <-->|HTTP / SSE| API
+    API --> AgentLoop
+    AgentLoop --> ModelRouter
+    ModelRouter --> Ollama
+    AgentLoop --> Tools
+    Tools <--> Storage
+    Tools <--> CPU
+    Tools --> Sandbox
+```
+
+## 5. Detailed Architecture & Component Design
+
+* **FastAPI Backend (`prahari/main.py`):** The control plane. Exposes REST endpoints and SSE streams to track agent progress. It binds exclusively to `127.0.0.1`.
+* **Model Router & VRAM Manager (`prahari/router/`):** Evaluates models against a given task step (scoring quality, context size, and VRAM swap latency penalties). It orchestrates loading models into Ollama on the fly.
+* **Agent Loop (`prahari/agent/loop.py`):** Enforces a `RECEIVE → CLASSIFY → PLAN → [EXECUTE]* → DELIVER` state machine. It prevents infinite agent loops by strictly limiting retries and wall-clock time. 
+* **Knowledge Store (`prahari/knowledge/store.py`):** A custom SQLite implementation for vector search. Avoids the overhead of external vector DB services (like Qdrant) while maintaining high-performance hybrid RRF search isolated by `org_id`.
+* **Docker Sandbox (`prahari/tools/code_sandbox.py`):** Runs Python code generated by the agent in an ephemeral, stripped-down Alpine container with `--network none` and `--security-opt no-new-privileges`.
+* **Security & Egress Guard (`prahari/api/security.py`):** Validates air-gap status by actively probing for egress capabilities and logging security states.
+
+## 6. Flowcharts
+
+**Agent Execution Protocol:**
+```mermaid
+flowchart TD
+    Start([User Request]) --> Classify[Classify Intent & Capabilities]
+    Classify --> Plan[Generate schema-constrained DAG Plan]
+    Plan --> CheckStep{More steps?}
+    CheckStep -- Yes --> Route[Score & Route Model for Step]
+    Route --> Execute[Invoke Tool]
+    Execute --> Critic{Observation OK?}
+    Critic -- No --> Repair[Replan / Repair Arg]
+    Repair --> Execute
+    Critic -- Yes --> CheckStep
+    CheckStep -- No --> Synth[Synthesize Data]
+    Synth --> Deliver[Render Deliverable Artifact]
+    Deliver --> End([Await Human Approval])
+```
+
+## 7. Data Flow
+
+1. **Ingestion:** Users upload documents to `inbox/`. The backend extracts text/images, chunks them, generates CPU-based BGE-m3 embeddings, and stores them in SQLite.
+2. **Querying:** When `kb.search` is invoked, the query is embedded via CPU. SQLite executes a BM25 sparse search and a dense vector search. Results are fused using RRF.
+3. **Synthesis:** The retrieved chunks (with citations and bounding boxes) are passed into the prompt context for the selected generative model.
+
+## 8. Technology Stack
+
+* **Frontend:** React, Vite, Vanilla CSS.
+* **Backend:** Python 3.11, FastAPI, SSE (Server-Sent Events).
+* **AI & Inference:** Ollama (Native), Qwen2.5 suite (`1.5b`, `3b-instruct`, `coder`, `vl`), Moondream, BGE-m3.
+* **Data Storage & Knowledge Base:** SQLite (with custom Numpy vector dot-product queries).
+* **Execution Sandbox:** Docker.
+* **Calculations & Data:** `sympy`, `pint` (units), `python-docx`, `python-pptx`, `openpyxl`.
+
+## 9. Project Structure
+
+```text
+SIH-2026/
+├── backend/
+│   └── prahari/
+│       ├── agent/        # Loop, planner, recipes, schemas
+│       ├── api/          # FastAPI routes (security, runs, documents)
+│       ├── knowledge/    # Chunking, ingestion, hybrid SQLite store
+│       ├── llm/          # Ollama client wrappers
+│       ├── router/       # VRAM manager, registry, deterministic scorer
+│       ├── tools/        # Tools: sandbox, deliverables, calc, files
+│       └── main.py       # API Application entry point
+├── frontend/
+│   ├── src/
+│   │   ├── components/   # React UI components (Sidebar, Timeline, Inspector)
+│   │   ├── hooks/        # SSE streaming hooks
+│   │   └── lib/          # API utilities
+│   └── vite.config.js    # Vite configuration
+├── config/               # models.yaml, profiles.yaml
+├── data/                 # Local persistence (org data, sqlite db, inboxes, workspaces)
+├── scripts/              # Utility scripts for CLI execution & testing
+└── README.md
+```
+
+## 10. API / Backend Overview
+
+* **`POST /api/runs`**: Starts a new agentic run with a prompt and history.
+* **`GET /api/runs/{id}/events`**: SSE stream that emits lifecycle events (stage started, tool invoked, observation, artifact created).
+* **`GET /api/models`**: Lists available models, their VRAM footprints, and the current residency state.
+* **`POST /api/documents/upload`**: Uploads and immediately indexes a document into the SQLite store.
+* **`GET /api/security/status`**: Reports the live audit count and external API call count (which is structurally guaranteed to be 0).
+
+## 11. Database / Storage Architecture
+
+PRAHARI utilizes **SQLite** for knowledge base and metadata storage, isolated per organization (`org_id`).
+* **`documents`**: Tracks file metadata, ingestion time, and chunk counts.
+* **`chunks`**: Stores raw text, page numbers, bounding boxes, and BLOBs of numpy float32 dense embeddings.
+* **`postings`**: An inverted index table for BM25 term frequencies (`term`, `chunk_id`, `tf`).
+
+```mermaid
+erDiagram
+    DOCUMENTS {
+        string doc_id PK
+        string filename
+        string kind
+    }
+    CHUNKS {
+        int chunk_id PK
+        string doc_id FK
+        string text
+        blob embedding
+    }
+    POSTINGS {
+        string term
+        int chunk_id FK
+        int tf
+    }
+    DOCUMENTS ||--o{ CHUNKS : "contains"
+    CHUNKS ||--o{ POSTINGS : "indexed_by"
+```
+
+## 12. AI/ML Architecture
+
+### Model Routing & LLM Usage
+PRAHARI uses a dynamic **VRAM Manager** and **Model Router** that automatically hot-swaps models inside Ollama based on the specific capability required for each step of the plan. This allows running multiple specialized models sequentially on a single 6GB mid-range GPU.
+
+```mermaid
+flowchart TD
+    Task([Agent Step / Task]) --> Router{Model Router}
+    
+    %% Router Decision Logic
+    Router -- Role: reason, write, summarize, classify --> General[Generalist Models]
+    Router -- Role: code --> Coder[Coding Models]
+    Router -- Role: vision, diagram --> Vision[Vision / OCR Models]
+    Router -- Role: embed --> Embed[Embedding Model]
+    
+    %% Models Used
+    General --> Qwen3B[qwen2.5:3b-instruct \n drafting & reasoning]
+    General --> Qwen1B[qwen2.5:1.5b \n fast classification]
+    
+    Coder --> QwenCoder[qwen2.5-coder:3b / 1.5b \n python sandbox]
+    
+    Vision --> QwenVL[qwen2.5vl:3b \n engineering drawings]
+    Vision --> Moondream[moondream \n fast photographs/scans]
+    
+    Embed --> BGEM3[bge-m3 \n hybrid RRF search]
+    
+    %% Execution Environments
+    Qwen3B -.-> GPU[(Loaded into GPU VRAM \n 1 model at a time)]
+    Qwen1B -.-> GPU
+    QwenCoder -.-> GPU
+    QwenVL -.-> GPU
+    Moondream -.-> GPU
+    
+    BGEM3 -.-> CPU[(Pinned to System RAM / CPU)]
+```
+
+* **No Fine-Tuning:** The models are strictly open-weight generalists. Domain knowledge lives in the RAG pipeline, preventing knowledge staleness.
+* **Structured Output:** All LLM plans and classifications are forced into valid JSON using Ollama's schema constraint API.
+* **VRAM Manager:** Manages the constraints of mid-range GPUs (e.g., RTX 3050 6GB) by executing only one generative model at a time. It uses a custom scoring formula:
+  `score = quality + fits_context + speed - swap_cost - vram_pressure`.
+* **CPU Embeddings:** `bge-m3` is pinned to the CPU to reserve precious GPU VRAM exclusively for generative models.
+
+## 13. Security Architecture
+
+* **Network Isolation:** No `http.get`, `email.send`, or shell tools exist in the tool registry. The application drops external calls (`HF_HUB_OFFLINE`, `TRANSFORMERS_OFFLINE`).
+* **Code Sandbox:** Docker container uses `--network none`, `--cap-drop ALL`, and runs as a non-root user.
+* **No Telemetry:** Telemetry for all standard dependencies is programmatically disabled.
+* **Workspace Jailing:** File modifications are strictly contained within `data/orgs/<org_id>/workspace/`.
+
+## 14. Deployment & Infrastructure
+
+The application runs locally without cloud dependencies.
+* **Backend Engine:** Runs natively on the host machine using Python 3.11+.
+* **Frontend:** Served via Node/Vite development server (or built as static assets).
+* **Inference:** Requires an active `ollama` daemon running on `127.0.0.1`.
+* **Isolation:** Requires Docker daemon to spawn ephemeral sandbox containers for code execution.
+
+## 15. Setup & Installation
+
+**Prerequisites:**
+* Windows/Linux/macOS with a GPU (min 6GB VRAM recommended, CPU fallback works).
+* Python 3.11+
+* Node.js 18+
+* Docker Desktop (for code sandboxing)
+* Ollama installed and running.
+
+**1. Pull AI Models (Ollama):**
 ```bash
-# 1. models (about 8 GB total, one time)
-ollama pull qwen2.5:3b-instruct
+ollama pull qwen2.5:1.5b
 ollama pull qwen2.5-coder:1.5b
 ollama pull bge-m3
-ollama pull moondream
-
-# 2. dependencies
-python -m venv .venv
-.venv/Scripts/python -m pip install -r requirements.txt    # Windows
-# source .venv/bin/activate && pip install -r requirements.txt   # Linux/macOS
-
-# 3. run the backend
-PYTHONPATH=backend .venv/Scripts/python -m uvicorn prahari.main:app \
-    --host 127.0.0.1 --port 8077
-
-# 4. run the flagship task from the console
-PYTHONPATH=backend .venv/Scripts/python scripts/run_task.py
 ```
+*(Optionally pull `qwen2.5:3b-instruct` and `qwen2.5vl:3b` if hardware permits).*
 
-Then open <http://127.0.0.1:8077/docs> for the API, or the frontend:
-
+**2. Setup Python Backend:**
 ```bash
-cd frontend && npm install && npm run dev
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
----
-
-## Try these
-
+**3. Setup Frontend:**
 ```bash
-# flagship: scanned inspection report -> cited approval note
-python scripts/run_task.py
-
-# ask a question grounded in the SOPs
-python scripts/run_task.py "What is the minimum retirement thickness for 8 inch sour service piping?"
-
-# any prompt you like
-python scripts/run_task.py "Summarise the last inspection report"
+cd frontend
+npm install
 ```
 
----
-
-## How it works
-
-```
-RECEIVE → CLASSIFY → PLAN ─┬─► SELECT → EXECUTE → OBSERVE → CRITIC ─┐
-                           │                                        │
-                           └────────── REPLAN (≤2) ◄────────────────┘
-                                              │ pass
-                              SYNTHESIZE → DELIVER → AWAIT_HUMAN
-```
-
-**The LLM fills in parameters and judges outcomes. Code owns the control flow.**
-That single decision is what makes a 3B model reliable enough for a refinery:
-
-- Every LLM output is **schema-constrained** — Ollama takes a JSON Schema as a
-  decoding constraint, so a malformed plan is unrepresentable rather than caught.
-- Plans are a **typed DAG**, validated against the tool registry *before* execution.
-- Known task archetypes use **recipes** — the plan skeleton is code, and the model
-  only classifies. This took the flagship task from 60s to 3.5s.
-- A **critic** checks postconditions; failure triggers a bounded repair.
-
-### Routing is per *step*, not per task
-
-So a single run visibly moves between models. The router scores every candidate:
-
-```
-hard gates:  modality ⊇ task.modalities  AND  roles ∋ task.role     else reject
-score     =  w_q·quality + w_ctx·fits_context + w_lat/est_latency
-             − w_swap·swap_cost(m)     ← 0 if already in VRAM
-             − w_vram·vram_pressure(m)
-```
-
-Real output from this machine — same request, different residency, different pick:
-
-```
-empty budget       →  qwen2.5-coder:1.5b   (the 7B would take 83% of a 6 GB budget)
-7B already loaded  →  qwen2.5-coder:7b     (already resident, pays no swap penalty)
-```
-
-### Numbers are never computed by the model
-
-`calc.evaluate` uses sympy with units from pint, and returns the ordered step
-list. In a refinery a hallucinated decimal place is a safety incident, so the
-LLM decides *what* to compute and the engine decides *what the answer is*.
-
-### Adding a model is one registry entry
-
-`config/models.yaml`, then `ollama pull`, then `POST /api/models/reload`. No code
-change — that is the problem statement's "addable without redesigning the system".
-
----
-
-## Layout
-
-```
-backend/prahari/
-  api/         FastAPI routes + SSE event stream
-  agent/       loop, schemas, hints, extract, recipes
-  router/      registry, scorer, residency manager
-  llm/         Ollama client
-  tools/       base (registry + policy), calc, files, deliverables, stubs
-config/        models.yaml, profiles.yaml
-frontend/      Vite + React console
-scripts/       run_task.py (console client), checks
-```
-
----
-
-## Testing
-
+**4. Start the Application:**
 ```bash
-PYTHONPATH=backend .venv/Scripts/python -m pytest backend/tests -q
-PYTHONPATH=backend .venv/Scripts/python scripts/check_pipeline.py
+# In the project root
+python run_dev.py
 ```
+This script simultaneously launches the FastAPI backend on port 8000 and the Vite frontend on port 3000.
 
-`tests/test_extract.py` pins the value-attribution logic, which once swapped two
-thickness readings and produced a confidently wrong corrosion rate. A wrong
-number that looks right is the worst failure this system can produce.
+## 16. Usage
 
----
+1. Open `http://localhost:3000` in your browser.
+2. The UI will show a conversational interface.
+3. Use the Sidebar to upload confidential documents (e.g., inspection reports, standard operating procedures).
+4. Enter a prompt: *"Draft an approval note for the thickness deficiency at Elbow E-14 on line 8-P-1204."*
+5. Watch the timeline as the agent classifies the intent, searches the internal SQLite database, calculates corrosion rates using `sympy`, and generates a final `.docx` artifact.
+6. Review the artifact using the Inspector pane.
 
-## Security posture
+## 17. Design & Engineering Decisions
 
-No network tool and no shell tool exist in the registry — by construction, not by
-policy. `fs.read`/`fs.write` are jailed to the run workspace. Even a fully
-compromised agent has no route out. The egress guard, live network monitor,
-canary and hash-chained audit log land in phase P6.
+* **SQLite over Qdrant:** Swapped out Qdrant for SQLite vector/BM25 storage. This eliminates the need for an extra persistent background Docker container, simplifying on-premise installation drastically while keeping data segregated by `org_id`.
+* **Schema-Constrained LLMs over Re-prompting:** Uses Ollama's structured output instead of asking the model nicely and looping on failures. Unrepresentable plans cannot be emitted.
+* **Deterministic Math over LLM Math:** Implemented `calc.evaluate` via `sympy` and `pint`. Industrial engineers require auditable, repeatable math with explicit units.
 
-**Explicitly not claimed:** protection from screen photography, a malicious admin
-with physical access, or a user copying a generated file to removable media.
+## 18. Current Implementation Status
+
+**Fully Implemented:**
+* Local FastAPI and React/Vite UI with live SSE streams.
+* Agentic Directed Acyclic Graph (DAG) loop with strict `Plan -> Execute -> Critic` workflow.
+* Dynamic VRAM-aware model router with hot-swapping via Ollama.
+* Deterministic math tool (`sympy`).
+* Native deliverable generation (`.docx`, `.xlsx`, `.pptx`).
+* Ephemeral Code Sandbox in Docker.
+* Custom SQLite hybrid RAG store (BM25 + dense RRF).
+
+**Planned/Future Work:**
+* **Role-Based Access Control (RBAC) & User Auth:** Currently missing; single-tenant execution assumed per host.
+* **Multi-GPU Scaling:** Currently optimized aggressively for a single mid-range GPU.
+
+## 19. Limitations & Future Improvements
+
+* **Concurrency Limits:** Since only one generative model is loaded into VRAM at a time, simultaneous requests from multiple users will cause significant model thrashing. Future improvements could cluster requests or batch operations.
+* **OCR Quality:** Built-in PDF parsing uses `PyMuPDF`. Handling complex, dirty handwritten scans requires the `VL` model, which strains smaller hardware. 
+* **Vector Dimensionality:** The SQLite embedding setup is currently hardcoded for `bge-m3` vectors. Swapping to a different embedding model requires wiping the database.
+
+## 20. Hackathon Context (SIH-2026 / SIH26117)
+
+PRAHARI directly answers problem statement **SIH26117**.
+* **Requirement:** *Self-hosted, air-gapped AI workbench... nothing leaves the premises.* 
+  **Implemented:** Zero external API calls. Egress guards active.
+* **Requirement:** *Agentic... iterate on a task... output real deliverables.*
+  **Implemented:** Multi-step agent loop rendering Word/Excel files with deterministic calculation steps.
+* **Requirement:** *Grounded in org's own manuals.*
+  **Implemented:** SQLite Hybrid RRF knowledge base scoped by `org_id`.
+* **Requirement:** *Multiple open weight models... automatically pick the right one.*
+  **Implemented:** `Router/Scorer` dynamically swaps models per specific DAG step.
